@@ -82,7 +82,7 @@ def main():
     filenames = os.listdir(source_genomes_directory)
     for filename in filenames:
         if filename.endswith('.fasta') or filename.endswith('.fna'):
-            genome_names_used_in_simulation.append(filename.splot('.')[0])
+            genome_names_used_in_simulation.append(filename.split('.')[0])
     
     # go into the kegg genomes directory and find the corresponding mapping files
     for used_genome_name in genome_names_used_in_simulation:
