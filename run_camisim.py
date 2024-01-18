@@ -152,7 +152,7 @@ def main():
     # read the gene to ko mapping file
     genes_to_kos_df = pd.read_csv(gene_to_ko_mapping_filename)
     gene_name_to_ko_id_dict = {}
-    gene_name_list = genes_to_kos_df['gene_name'].tolist()
+    gene_name_list = genes_to_kos_df['gene_id'].tolist()
     ko_id_list = genes_to_kos_df['ko_id'].tolist()
     for gene_name, ko_id in zip(gene_name_list, ko_id_list):
         gene_name_to_ko_id_dict[gene_name] = ko_id
