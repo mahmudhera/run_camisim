@@ -11,6 +11,7 @@ import pandas as pd
 #camisim_path = '/home/grads/mbr5797/camisim/CAMISIM-1.3/metagenome_from_profile.py'
 camisim_path = '/home/grads/mbr5797/camisim/CAMISIM-1.3/metagenomesimulation.py'
 kegg_genomes_directory = '/scratch/mbr5797/genomes_extracted_from_kegg'
+gene_to_ko_mapping_filename = '/scratch/mbr5797/genomes_extracted_from_kegg/present_genes_and_koids.csv'
 
 def get_kegg_genome_mapping_filename(kegg_genome_name):
     return kegg_genomes_directory + '/' + kegg_genome_name + '/' + kegg_genome_name + '_mapping.csv'
@@ -26,7 +27,8 @@ def main():
     parser.add_argument('--seed', type=int, help='Seed used in simulation', default=0)
     parser.add_argument('--outdir', type=str, help='Output directory', default='./out')
     parser.add_argument('--size', type=float, help='Size of the file in Gbp', default=0.1)
-    parser.add_argument('--ground_truth', type=str, help='Ground truth file', default='./ground_truth.csv')
+    parser.add_argument('--gene_g_t', type=str, help='Ground truth file', default='./gene_ground_truth.csv')
+    parser.add_argument('--ko_g_t', type=str, help='Ground truth file', default='./ko_ground_truth.csv')
     args = parser.parse_args()
 
     # read the arguments
@@ -39,7 +41,8 @@ def main():
     seed = args.seed
     outdir = args.outdir
     size = args.size
-    ground_truth_filename = args.ground_truth
+    gene_ground_truth_filename = args.gene_g_t
+    ko_ground_truth_filename = args.ko_g_t
 
     # read the sample config file
     config = configparser.ConfigParser()
@@ -137,12 +140,59 @@ def main():
             gene_name_to_num_nucleotides_covered_dict[gene_name] = len(coverage_list) - num_zeros
 
     # store the gene level information as ground truth
-    with open(ground_truth_filename, 'w') as ground_truth_file:
+    with open(gene_ground_truth_filename, 'w') as ground_truth_file:
         ground_truth_file.write('gene_name,mean_coverage,median_coverage,num_nts_covered,num_reads_in_gene\n')
         for gene_name in gene_name_to_num_reads_dict.keys():
             ground_truth_file.write(f'{gene_name},{gene_name_mean_coverage_dict[gene_name]},{gene_name_to_median_coverage_dict[gene_name]},{gene_name_to_num_nucleotides_covered_dict[gene_name]},{gene_name_to_num_reads_dict[gene_name]}\n')
     
+    ###########################################################
+    # use gene to ko mapping to get the ko level ground truth #
+    ###########################################################
+            
+    # read the gene to ko mapping file
+    genes_to_kos_df = pd.read_csv(gene_to_ko_mapping_filename)
+    gene_name_to_ko_id_dict = {}
+    gene_name_list = genes_to_kos_df['gene_name'].tolist()
+    ko_id_list = genes_to_kos_df['ko_id'].tolist()
+    for gene_name, ko_id in zip(gene_name_list, ko_id_list):
+        gene_name_to_ko_id_dict[gene_name] = ko_id
+    
+    ko_abundances_by_num_reads = {}
+    ko_abundances_by_num_nts_in_reads = {}
+    ko_abundances_by_mean_cov = {}
+    ko_abundances_by_med_cov = {}
 
+    # iterate over the genes
+    for gene_name in gene_name_to_num_reads_dict.keys():
+        koid = gene_name_to_ko_id_dict[gene_name]
+        num_reads = gene_name_to_num_reads_dict[gene_name]
+        num_nts_in_reads = gene_name_to_num_nucleotides_covered_dict[gene_name]
+        mean_cov = gene_name_mean_coverage_dict[gene_name]
+        med_cov = gene_name_to_median_coverage_dict[gene_name]
+
+        # update the ko abundances
+        if koid not in ko_abundances_by_num_reads:
+            ko_abundances_by_num_reads[koid] = 0
+        ko_abundances_by_num_reads[koid] += num_reads
+
+        if koid not in ko_abundances_by_num_nts_in_reads:
+            ko_abundances_by_num_nts_in_reads[koid] = 0
+        ko_abundances_by_num_nts_in_reads[koid] += num_nts_in_reads
+
+        if koid not in ko_abundances_by_mean_cov:
+            ko_abundances_by_mean_cov[koid] = 0
+        ko_abundances_by_mean_cov[koid] += mean_cov
+
+        if koid not in ko_abundances_by_med_cov:
+            ko_abundances_by_med_cov[koid] = 0
+        ko_abundances_by_med_cov[koid] += med_cov
+
+    # write the ko level ground truth
+    with open(ko_ground_truth_filename, 'w') as ground_truth_file:
+        ground_truth_file.write('ko_id,abund_by_num_reads,abund_by_num_nts,abund_by_mean_cov,abund_by_med_cov\n')
+        for koid in ko_abundances_by_num_reads.keys():
+            ground_truth_file.write(f'{koid},{ko_abundances_by_num_reads[koid]},{ko_abundances_by_num_nts_in_reads[koid]},{ko_abundances_by_mean_cov[koid]},{ko_abundances_by_med_cov[koid]}\n')
+    
 
 if __name__ == '__main__':
     main()
