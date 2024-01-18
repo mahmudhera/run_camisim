@@ -50,9 +50,13 @@ def main():
         config.write(config_file)
 
     # run camisim
+    subprocess.run(['rm', '-rf', outdir])
+    subprocess.run(['mkdir', outdir])
     cmd = f'python {camisim_path} -seed {seed} -id KL -p 64 {config_filename}'
     print(cmd)
     subprocess.run(cmd.split(' '))
+
+    # locate the bam files, then convert to a ground truth
 
 if __name__ == '__main__':
     main()
