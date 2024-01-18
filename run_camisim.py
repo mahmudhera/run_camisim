@@ -74,9 +74,9 @@ def main():
             simulation_directory_name = directory
             break
 
-    #########################################################   
-    # locate the bam files, then convert to a ground truth ##
-    #########################################################
+    ######################################################################
+    # locate the bam files, then convert to a ground truth at gene level #
+    ######################################################################
     # find the genomes that have been used in the simulation
     source_genomes_directory = outdir + '/source_genomes'
     genome_names_used_in_simulation = []
@@ -88,6 +88,9 @@ def main():
     # records to keep for each gene
     # gene name, and num of reads that mapped to it
     gene_name_to_num_reads_dict = {}
+    gene_name_mean_coverage_dict = {}
+    gene_name_to_median_coverage_dict = {}
+    gene_name_to_num_nucleotides_covered_dict = {}
     
     # go into the kegg genomes directory and find the corresponding mapping files
     for used_genome_name in genome_names_used_in_simulation:
@@ -119,21 +122,19 @@ def main():
             num_reads_in_this_gene = len(list_of_matches)
             gene_name_to_num_reads_dict[gene_name] = num_reads_in_this_gene
 
-    # use all the matches to create a ground truth file by studying what we did before
-    # relative_abundance of genes by number of reads coming from that gene
-    total_num_of_reads = sum(gene_name_to_num_reads_dict.values())
-    gene_name_to_relative_abundance_by_num_reads_dict = {}
-    for gene_name, num_reads in gene_name_to_num_reads_dict.items():
-        gene_name_to_relative_abundance_by_num_reads_dict[gene_name] = 1.0 * num_reads / total_num_of_reads
-    
-    # sort the gene names based on decreasing order of the relative abundance
-    gene_names_sorted_by_relative_abundance = sorted(gene_name_to_relative_abundance_by_num_reads_dict.keys(), key=lambda x: gene_name_to_relative_abundance_by_num_reads_dict[x], reverse=True)
+            # record the mean and coverage of this gene
+            coverage_list = [ pileupcolumn.n for pileupcolumn in bamfile.pileup(contig_id, start_position, end_position) ]
+            gene_name_mean_coverage_dict[gene_name] = sum(coverage_list) / len(coverage_list)
+            gene_name_to_median_coverage_dict[gene_name] = sorted(coverage_list)[len(coverage_list) // 2]
+            num_zeros = coverage_list.count(0)
+            gene_name_to_num_nucleotides_covered_dict[gene_name] = len(coverage_list) - num_zeros
 
+    # store the gene level information as ground truth
     with open(ground_truth_filename, 'w') as ground_truth_file:
-        for gene_name in gene_names_sorted_by_relative_abundance:
-            relative_abundance = gene_name_to_relative_abundance_by_num_reads_dict[gene_name]
-            ground_truth_file.write(f'{gene_name},{relative_abundance}\n')
-
+        ground_truth_file.write('gene_name,mean_coverage,median_coverage,num_nts_covered,num_reads_in_gene\n')
+        for gene_name in gene_name_to_num_reads_dict.keys():
+            ground_truth_file.write(f'{gene_name},{gene_name_mean_coverage_dict[gene_name]},{gene_name_to_median_coverage_dict[gene_name]},{gene_name_to_num_nucleotides_covered_dict[gene_name]},{gene_name_to_num_reads_dict[gene_name]}\n')
+    
 
 
 if __name__ == '__main__':
