@@ -139,11 +139,28 @@ def main():
             num_zeros = coverage_list.count(0)
             gene_name_to_num_nucleotides_covered_dict[gene_name] = len(coverage_list) - num_zeros
 
+    # convert the gene level ground truth to relative abundance
+    total_num_reads = sum(gene_name_to_num_reads_dict.values())
+    total_num_nts_in_reads = sum(gene_name_to_num_nucleotides_covered_dict.values())
+    total_mean_cov = sum(gene_name_mean_coverage_dict.values())
+    total_med_cov = sum(gene_name_to_median_coverage_dict.values())
+
+    gene_name_to_rel_abund_by_num_reads_dict = {}
+    gene_name_to_rel_abund_by_num_nts_dict = {}
+    gene_name_to_rel_abund_by_mean_cov_dict = {}
+    gene_name_to_rel_abund_by_med_cov_dict = {}
+
+    for gene_name in gene_name_to_num_reads_dict.keys():
+        gene_name_to_rel_abund_by_num_reads_dict[gene_name] = gene_name_to_num_reads_dict[gene_name] / (1.0*total_num_reads)
+        gene_name_to_rel_abund_by_num_nts_dict[gene_name] = gene_name_to_num_nucleotides_covered_dict[gene_name] / (1.0*total_num_nts_in_reads)
+        gene_name_to_rel_abund_by_mean_cov_dict[gene_name] = gene_name_mean_coverage_dict[gene_name] / (1.0*total_mean_cov)
+        gene_name_to_rel_abund_by_med_cov_dict[gene_name] = gene_name_to_median_coverage_dict[gene_name] / (1.0*total_med_cov)
+
     # store the gene level information as ground truth
     with open(gene_ground_truth_filename, 'w') as ground_truth_file:
         ground_truth_file.write('gene_name,mean_coverage,median_coverage,num_nts_covered,num_reads_in_gene\n')
         for gene_name in gene_name_to_num_reads_dict.keys():
-            ground_truth_file.write(f'{gene_name},{gene_name_mean_coverage_dict[gene_name]},{gene_name_to_median_coverage_dict[gene_name]},{gene_name_to_num_nucleotides_covered_dict[gene_name]},{gene_name_to_num_reads_dict[gene_name]}\n')
+            ground_truth_file.write(f'{gene_name},{gene_name_to_rel_abund_by_mean_cov_dict[gene_name]},{gene_name_to_rel_abund_by_mean_cov_dict[gene_name]},{gene_name_to_rel_abund_by_num_nts_dict[gene_name]},{gene_name_to_rel_abund_by_num_reads_dict[gene_name]}\n')
     
     ###########################################################
     # use gene to ko mapping to get the ko level ground truth #
