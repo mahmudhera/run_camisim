@@ -124,6 +124,11 @@ def main():
 
             # record the mean and coverage of this gene
             coverage_list = [ pileupcolumn.n for pileupcolumn in bamfile.pileup(contig_id, start_position, end_position) ]
+            
+            # for debugging
+            print(coverage_list)
+            print(gene_name, contig_id, start_position, end_position)
+            
             gene_name_mean_coverage_dict[gene_name] = sum(coverage_list) / len(coverage_list)
             gene_name_to_median_coverage_dict[gene_name] = sorted(coverage_list)[len(coverage_list) // 2]
             num_zeros = coverage_list.count(0)
