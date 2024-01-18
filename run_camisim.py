@@ -84,6 +84,10 @@ def main():
     for filename in filenames:
         if filename.endswith('.fasta') or filename.endswith('.fna'):
             genome_names_used_in_simulation.append(filename.split('.')[0])
+
+    # records to keep for each gene
+    # gene name, and num of reads that mapped to it
+    gene_name_to_num_reads_dict = {}
     
     # go into the kegg genomes directory and find the corresponding mapping files
     for used_genome_name in genome_names_used_in_simulation:
@@ -107,7 +111,6 @@ def main():
         start_position_list = mapping_df['start_position'].tolist()
         end_position_list = mapping_df['end_position'].tolist()
         
-        gene_name_to_num_reads_dict = {}
         for gene_name, contig_id, start_position, end_position in zip(gene_name_list, contig_id_list, start_position_list, end_position_list):
             # for each gene, query the bam file using these intervals and the contig id
             list_of_matches = list(bamfile.fetch(contig_id, start_position, end_position))
@@ -116,12 +119,12 @@ def main():
             num_reads_in_this_gene = len(list_of_matches)
             gene_name_to_num_reads_dict[gene_name] = num_reads_in_this_gene
 
-        # use all the matches to create a ground truth file by studying what we did before
-        # relative_abundance of genes by number of reads coming from that gene
-        total_num_of_reads = sum(gene_name_to_num_reads_dict.values())
-        gene_name_to_relative_abundance_by_num_reads_dict = {}
-        for gene_name, num_reads in gene_name_to_num_reads_dict.items():
-            gene_name_to_relative_abundance_by_num_reads_dict[gene_name] = 1.0 * num_reads / total_num_of_reads
+    # use all the matches to create a ground truth file by studying what we did before
+    # relative_abundance of genes by number of reads coming from that gene
+    total_num_of_reads = sum(gene_name_to_num_reads_dict.values())
+    gene_name_to_relative_abundance_by_num_reads_dict = {}
+    for gene_name, num_reads in gene_name_to_num_reads_dict.items():
+        gene_name_to_relative_abundance_by_num_reads_dict[gene_name] = 1.0 * num_reads / total_num_of_reads
     
     # sort the gene names based on decreasing order of the relative abundance
     gene_names_sorted_by_relative_abundance = sorted(gene_name_to_relative_abundance_by_num_reads_dict.keys(), key=lambda x: gene_name_to_relative_abundance_by_num_reads_dict[x], reverse=True)
