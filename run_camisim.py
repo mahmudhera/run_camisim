@@ -187,6 +187,18 @@ def main():
             ko_abundances_by_med_cov[koid] = 0
         ko_abundances_by_med_cov[koid] += med_cov
 
+    # convert to relative abundance
+    total_num_reads = sum(ko_abundances_by_num_reads.values())
+    total_num_nts_in_reads = sum(ko_abundances_by_num_nts_in_reads.values())
+    total_mean_cov = sum(ko_abundances_by_mean_cov.values())
+    total_med_cov = sum(ko_abundances_by_med_cov.values())
+
+    for koid in ko_abundances_by_num_reads.keys():
+        ko_abundances_by_num_reads[koid] /= (1.0*total_num_reads)
+        ko_abundances_by_num_nts_in_reads[koid] /= (1.0*total_num_nts_in_reads)
+        ko_abundances_by_mean_cov[koid] /= (1.0*total_mean_cov)
+        ko_abundances_by_med_cov[koid] /= (1.0*total_med_cov)
+
     # write the ko level ground truth
     with open(ko_ground_truth_filename, 'w') as ground_truth_file:
         ground_truth_file.write('ko_id,abund_by_num_reads,abund_by_num_nts,abund_by_mean_cov,abund_by_med_cov\n')
