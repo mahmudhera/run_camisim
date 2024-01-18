@@ -63,13 +63,13 @@ def main():
     # run camisim
     #subprocess.run(['rm', '-rf', outdir])
     #subprocess.run(['mkdir', outdir])
-    cmd = f'python {camisim_path} -seed {seed} -id KL -p 64 {config_filename}'
+    #cmd = f'python {camisim_path} -seed {seed} -id KL -p 64 {config_filename}'
     #print(cmd)
-    subprocess.run(cmd.split(' '))
+    #subprocess.run(cmd.split(' '))
 
     # find the simulation directory name
     for directory in os.listdir(outdir):
-        if directory.contains('sample'):
+        if 'sample' in directory:
             simulation_directory_name = directory
             break
 
