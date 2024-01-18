@@ -4,6 +4,7 @@ import configparser
 import subprocess
 import os
 import pysam
+import pandas as pd
 
 # hardcoded items
 # designed for the GPU machine
