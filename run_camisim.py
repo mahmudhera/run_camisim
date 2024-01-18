@@ -50,7 +50,7 @@ def main():
         config.write(config_file)
 
     # run camisim
-    cmd = f'python {camisim_path} -seed {seed} -s 2 -id KL -p 64 {config_filename}'
+    cmd = f'python {camisim_path} -seed {seed} -id KL -p 64 {config_filename}'
     print(cmd)
     subprocess.run(cmd.split(' '))
 
