@@ -61,11 +61,11 @@ def main():
         config.write(config_file)
 
     # run camisim
-    subprocess.run(['rm', '-rf', outdir])
-    subprocess.run(['mkdir', outdir])
+    #subprocess.run(['rm', '-rf', outdir])
+    #subprocess.run(['mkdir', outdir])
     cmd = f'python {camisim_path} -seed {seed} -id KL -p 64 {config_filename}'
-    print(cmd)
-    #subprocess.run(cmd.split(' '))
+    #print(cmd)
+    subprocess.run(cmd.split(' '))
 
     # find the simulation directory name
     for directory in os.listdir(outdir):
