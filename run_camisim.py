@@ -51,6 +51,7 @@ def main():
 
     # run camisim
     cmd = f'python {camisim_path} -seed {seed} -s 2 -id KL -p 64 {config_filename}'
+    print(cmd)
     subprocess.run(cmd.split(' '))
 
 if __name__ == '__main__':
