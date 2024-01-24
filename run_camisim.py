@@ -240,7 +240,7 @@ def main():
     with open(args.metagenome_filename, 'w') as outfile:
         for fname in fastq_filenames:
             # open the gzipped file, read all the lines, and write to the outfile
-            with gzip.open(fname, 'rb') as infile:
+            with gzip.open(fname, 'r') as infile:
                 for line in infile:
                     outfile.write(line)
 
