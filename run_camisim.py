@@ -5,6 +5,7 @@ import subprocess
 import os
 import pysam
 import pandas as pd
+import gzip
 
 # hardcoded items
 # designed for the GPU machine
@@ -12,6 +13,7 @@ import pandas as pd
 camisim_path = '/home/grads/mbr5797/camisim/CAMISIM-1.3/metagenomesimulation.py'
 kegg_genomes_directory = '/scratch/mbr5797/genomes_extracted_from_kegg'
 gene_to_ko_mapping_filename = '/scratch/mbr5797/genomes_extracted_from_kegg/present_genes_and_koids.csv'
+sample_config_filename = '/scratch/mbr5797/camisim_sample_config/sample_config.ini'
 
 def get_kegg_genome_mapping_filename(kegg_genome_name):
     return kegg_genomes_directory + '/' + kegg_genome_name + '/' + kegg_genome_name + '_mapping.csv'
@@ -19,16 +21,20 @@ def get_kegg_genome_mapping_filename(kegg_genome_name):
 def get_bam_filename(outdir, simulation_directory_name, genome_name):
     return outdir + '/' + simulation_directory_name + '/bam/' + genome_name + '.bam'
 
+def get_fastq_filenames(outdir, simulation_directory_name, genome_name):
+    return outdir + '/' + simulation_directory_name + '/reads/' + genome_name + '1.fq.gz', outdir + '/' + simulation_directory_name + '/reads/' + genome_name + '2.fq.gz'
+
 def main():
     # parse arguments
     parser = argparse.ArgumentParser(description='Process number of genomes.')
     parser.add_argument('number_of_genomes', type=int, help='Number of genomes')
-    parser.add_argument('--config', type=str, help='Config file')
+    parser.add_argument('--config', type=str, help='Config file (output of this script)', default='./config.ini')
     parser.add_argument('--seed', type=int, help='Seed used in simulation', default=0)
-    parser.add_argument('--outdir', type=str, help='Output directory', default='./out')
+    parser.add_argument('--outdir', type=str, help='Output directory for camisim', default='./out')
     parser.add_argument('--size', type=float, help='Size of the file in Gbp', default=0.1)
-    parser.add_argument('--gene_g_t', type=str, help='Ground truth file', default='./gene_ground_truth.csv')
-    parser.add_argument('--ko_g_t', type=str, help='Ground truth file', default='./ko_ground_truth.csv')
+    parser.add_argument('--gene_g_t', type=str, help='Ground truth file (Output)', default='./gene_ground_truth.csv')
+    parser.add_argument('--ko_g_t', type=str, help='Ground truth file (Output)', default='./ko_ground_truth.csv')
+    parser.add_argument('--metagenome_filename', type=str, help='Metagenome filename', default='./metagenome.fastq.gz')
     args = parser.parse_args()
 
     # read the arguments
@@ -46,7 +52,7 @@ def main():
 
     # read the sample config file
     config = configparser.ConfigParser()
-    config.read('sample_config.ini')
+    config.read(sample_config_filename)
 
     # update the num_genomes field with the command line argument
     # section: Main
@@ -65,11 +71,11 @@ def main():
         config.write(config_file)
 
     # run camisim
-    #subprocess.run(['rm', '-rf', outdir])
-    #subprocess.run(['mkdir', outdir])
-    #cmd = f'python {camisim_path} -seed {seed} -id KL -p 64 {config_filename}'
-    #print(cmd)
-    #subprocess.run(cmd.split(' '))
+    subprocess.run(['rm', '-rf', outdir])
+    subprocess.run(['mkdir', outdir])
+    cmd = f'python {camisim_path} -seed {seed} -id KL -p 64 {config_filename}'
+    print(cmd)
+    subprocess.run(cmd.split(' '))
 
     # find the simulation directory name
     for directory in os.listdir(outdir):
@@ -222,6 +228,20 @@ def main():
         for koid in ko_abundances_by_num_reads.keys():
             ground_truth_file.write(f'{koid},{ko_abundances_by_num_reads[koid]},{ko_abundances_by_num_nts_in_reads[koid]},{ko_abundances_by_mean_cov[koid]},{ko_abundances_by_med_cov[koid]}\n')
     
+    # write the metagenome file by merging the fq.gz files in the reads directory under the simulation directory
+    # get the filenames
+    fastq_filenames = []
+    for genome_name in genome_names_used_in_simulation:
+        names = get_fastq_filenames(outdir, simulation_directory_name, genome_name)
+        fastq_filenames.append(names[0], names[1])
+
+    # merge the files
+    with open(args.metagenome_filename, 'w') as outfile:
+        for fname in fastq_filenames:
+            # open the gzipped file, read all the lines, and write to the outfile
+            with gzip.open(fname, 'rb') as infile:
+                for line in infile:
+                    outfile.write(line)
 
 if __name__ == '__main__':
     main()
