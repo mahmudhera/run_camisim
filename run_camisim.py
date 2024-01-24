@@ -242,7 +242,7 @@ def main():
             # open the gzipped file, read all the lines, and write to the outfile
             with gzip.open(fname, 'r') as infile:
                 for line in infile:
-                    outfile.write(str(line))
+                    outfile.write(line.decode('ascii'))
 
 if __name__ == '__main__':
     main()
