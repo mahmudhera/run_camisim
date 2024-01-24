@@ -36,8 +36,8 @@ python run_camisim.py 10 --config config_seed_0_size_0.1.ini --seed 0 --outdir .
 
 Run varying
 
-1. number of genomes [in progress]
-1. size of the sample
+1. number of genomes [simulations in progress]
+1. size of the sample [code is ready]
 1. different error profiles
 1. number of novel genomes
 1. divergence rate
