@@ -14,6 +14,9 @@ camisim_path = '/home/grads/mbr5797/camisim/CAMISIM-1.3/metagenomesimulation.py'
 kegg_genomes_directory = '/scratch/mbr5797/genomes_extracted_from_kegg'
 gene_to_ko_mapping_filename = '/scratch/mbr5797/genomes_extracted_from_kegg/present_genes_and_koids.csv'
 sample_config_filename = '/scratch/mbr5797/camisim_sample_config/sample_config.ini'
+metadata_filename = '/scratch/mbr5797/camisim_sample_config/metadata.tsv'
+genome_to_id_filename = '/scratch/mbr5797/camisim_sample_config/genome_to_id.tsv'
+
 
 def get_kegg_genome_mapping_filename(kegg_genome_name):
     return kegg_genomes_directory + '/' + kegg_genome_name + '/' + kegg_genome_name + '_mapping.csv'
@@ -81,6 +84,8 @@ def main():
     # section: community0
     config.set('community0', 'genomes_total', str(number_of_genomes))
     config.set('community0', 'genomes_real', str(number_of_genomes))
+    config.set('community0', 'metadata', metadata_filename)
+    config.set('community0', 'id_to_genome_file', genome_to_id_filename)
 
     # write the updated config to the config filename
     with open(config_filename, 'w') as config_file:
