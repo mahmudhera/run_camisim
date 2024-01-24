@@ -34,7 +34,7 @@ def main():
     parser.add_argument('--size', type=float, help='Size of the file in Gbp', default=0.1)
     parser.add_argument('--gene_g_t', type=str, help='Ground truth file (Output)', default='./gene_ground_truth.csv')
     parser.add_argument('--ko_g_t', type=str, help='Ground truth file (Output)', default='./ko_ground_truth.csv')
-    parser.add_argument('--metagenome_filename', type=str, help='Metagenome filename', default='./metagenome.fastq.gz')
+    parser.add_argument('--metagenome_filename', type=str, help='Metagenome filename', default='./metagenome.fastq')
     args = parser.parse_args()
 
     # read the arguments
@@ -233,7 +233,8 @@ def main():
     fastq_filenames = []
     for genome_name in genome_names_used_in_simulation:
         names = get_fastq_filenames(outdir, simulation_directory_name, genome_name)
-        fastq_filenames.append(names[0], names[1])
+        fastq_filenames.append(names[0])
+        fastq_filenames.append(names[1])
 
     # merge the files
     with open(args.metagenome_filename, 'w') as outfile:
