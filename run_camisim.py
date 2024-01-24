@@ -50,7 +50,7 @@ def main():
     parser.add_argument('--gene_g_t', type=str, help='Ground truth file (Output)', default='./gene_ground_truth.csv')
     parser.add_argument('--ko_g_t', type=str, help='Ground truth file (Output)', default='./ko_ground_truth.csv')
     parser.add_argument('--metagenome_filename', type=str, help='Metagenome filename (Output)', default='./metagenome.fastq')
-    parser.add_argument('--genome_cov_file', action='file where the genome coverages are written (Output)', default='./genome_coverages.csv')
+    parser.add_argument('--genome_cov_file', help='file where the genome coverages are written (Output)', default='./genome_coverages.csv')
     args = parser.parse_args()
 
     # read the arguments
