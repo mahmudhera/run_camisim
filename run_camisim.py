@@ -39,7 +39,8 @@ def main():
     - gene ground truth filename (str) \n
     - ko ground truth filename (str) \n
     - merged metagenome filename (str) \n
-    Usage example: python run_camisim.py 10 --config config_seed_0_size_0.1.ini --seed 0 --outdir ./out_seed_0_size_0.1 --size 0.1 --gene_g_t gene_ground_truth_seed_0_size_0.1.csv --ko_g_t ko_ground_truth_seed_0_size_0.1.csv --metagenome_filename metagenome_seed_0_size_0.1.fastq"""
+    - genome coverage filename (str) \n
+    Usage example: python run_camisim.py 10 --config config_seed_0_size_0.1.ini --seed 0 --outdir ./out_seed_0_size_0.1 --size 0.1 --gene_g_t gene_ground_truth_seed_0_size_0.1.csv --ko_g_t ko_ground_truth_seed_0_size_0.1.csv --metagenome_filename metagenome_seed_0_size_0.1.fastq --genome_cov_file genome_coverages_seed_0_size_0.1.csv"""
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('number_of_genomes', type=int, help='Number of genomes')
     parser.add_argument('--config', type=str, help='Config file (output of this script)', default='./config.ini')
@@ -48,7 +49,8 @@ def main():
     parser.add_argument('--size', type=float, help='Size of the file in Gbp', default=0.1)
     parser.add_argument('--gene_g_t', type=str, help='Ground truth file (Output)', default='./gene_ground_truth.csv')
     parser.add_argument('--ko_g_t', type=str, help='Ground truth file (Output)', default='./ko_ground_truth.csv')
-    parser.add_argument('--metagenome_filename', type=str, help='Metagenome filename', default='./metagenome.fastq')
+    parser.add_argument('--metagenome_filename', type=str, help='Metagenome filename (Output)', default='./metagenome.fastq')
+    parser.add_argument('--genome_cov_file', action='file where the genome coverages are written (Output)', default='./genome_coverages.csv')
     args = parser.parse_args()
 
     # read the arguments
@@ -257,6 +259,15 @@ def main():
             with gzip.open(fname, 'r') as infile:
                 for line in infile:
                     outfile.write(line.decode('ascii'))
+
+    # go into bam directory, open bam files, calculate coverages, and write to a csv file
+    with open(args.genome_cov_file, 'w') as genome_cov_file:
+        genome_cov_file.write('genome_name,mean_coverage,median_coverage\n')
+        for genome_name in genome_names_used_in_simulation:
+            bam_filename = get_bam_filename(outdir, simulation_directory_name, genome_name)
+            bamfile = pysam.AlignmentFile(bam_filename, "rb")
+            coverage_list = [ pileupcolumn.n for pileupcolumn in bamfile.pileup() ]
+            genome_cov_file.write(f'{genome_name},{sum(coverage_list) / len(coverage_list)},{sorted(coverage_list)[len(coverage_list) // 2]}\n')
 
 if __name__ == '__main__':
     main()
