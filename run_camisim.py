@@ -30,15 +30,15 @@ def main():
     This script runs camisim with the given number of genomes, 
     and then converts the bam files to ground truth files. Finally,
     it merges the fastq files into a single file.
-    Inputs: 
-    - number of genomes to simulate (int)
-    - config file (will be written by this script, and used by camisim) (str)
-    - seed for simulations (int)
-    - output directory for camisim (str)
-    - size of the file in Gbp (float)
-    - gene ground truth filename (str)
-    - ko ground truth filename (str)
-    - merged metagenome filename (str)
+    Inputs: \n
+    - number of genomes to simulate (int) \n
+    - config file (will be written by this script, and used by camisim) (str) \n
+    - seed for simulations (int) \n
+    - output directory for camisim (str) \n
+    - size of the file in Gbp (float) \n
+    - gene ground truth filename (str) \n
+    - ko ground truth filename (str) \n
+    - merged metagenome filename (str) \n
     Usage example: python run_camisim.py 10 --config config_seed_0_size_0.1.ini --seed 0 --outdir ./out_seed_0_size_0.1 --size 0.1 --gene_g_t gene_ground_truth_seed_0_size_0.1.csv --ko_g_t ko_ground_truth_seed_0_size_0.1.csv --metagenome_filename metagenome_seed_0_size_0.1.fastq"""
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('number_of_genomes', type=int, help='Number of genomes')
