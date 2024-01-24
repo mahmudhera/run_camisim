@@ -29,7 +29,7 @@ python run_camisim.py 10 --config config_seed_0_size_0.1.ini --seed 0 --outdir .
 
 1. Add code to run the tools: diamond, sourmash gather, and mmseqs2. The code should also generate their resource usages
 1. Produce outputs of these tools
-1. Write code to read the outputs and assess the performance
+1. Write code to read the outputs and assess the performance (presence/absence based, and abundance based)
 1. Write code to aggregate the resource usages
 
 # Running simulations plan
