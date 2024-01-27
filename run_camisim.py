@@ -14,7 +14,7 @@ camisim_path = '/home/grads/mbr5797/camisim/CAMISIM-1.3/metagenomesimulation.py'
 kegg_genomes_directory = '/scratch/mbr5797/genomes_extracted_from_kegg'
 gene_to_ko_mapping_filename = '/scratch/mbr5797/genomes_extracted_from_kegg/present_genes_and_koids.csv'
 sample_config_filename = '/scratch/mbr5797/camisim_sample_config/sample_config.ini'
-metadata_filename = '/scratch/mbr5797/camisim_sample_config/metadata.tsv'
+metadata_filename = '/scratch/mbr5797/camisim_sample_config/metadata_new.tsv'
 genome_to_id_filename = '/scratch/mbr5797/camisim_sample_config/genome_to_id.tsv'
 
 
