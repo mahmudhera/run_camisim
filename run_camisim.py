@@ -121,8 +121,8 @@ def main():
     gene_name_mean_coverage_dict = {}
     gene_name_to_median_coverage_dict = {}
     gene_name_to_num_nucleotides_covered_dict = {}
-    
-    # go into the kegg genomes directory and find the corresponding mapping files
+
+    # go into the kegg genomes directory and ensure that mapping files exist for all the genomes used in the simulation
     for used_genome_name in genome_names_used_in_simulation:
         # get the file names
         mapping_filename = get_kegg_genome_mapping_filename(used_genome_name)
@@ -131,6 +131,12 @@ def main():
         # check that the files exist
         assert os.path.exists(mapping_filename)
         assert os.path.exists(bam_filename)
+    
+    # go into the kegg genomes directory and find the corresponding mapping files
+    for used_genome_name in genome_names_used_in_simulation:
+        # get the file names
+        mapping_filename = get_kegg_genome_mapping_filename(used_genome_name)
+        bam_filename = get_bam_filename(outdir, simulation_directory_name, used_genome_name)
 
         # read the bam file using pysam
         bamfile = pysam.AlignmentFile(bam_filename, "rb")
@@ -156,15 +162,20 @@ def main():
 
             # record the mean and coverage of this gene
             coverage_list = [ pileupcolumn.n for pileupcolumn in bamfile.pileup(contig_id, start_position, end_position) ]
+            num_nucleotides_covered = len(coverage_list)
+
+            # calculate num zeros: gene length - num nucleotides covered
+            gene_length = end_position - start_position + 1
+            if gene_length < 0:
+                gene_length = -gene_length
+            num_zeros = gene_length - num_nucleotides_covered
             
-            # for debugging
-            # print(coverage_list)
-            # print(gene_name, contig_id, start_position, end_position)
+            # add zeros to the coverage list
+            coverage_list += [0] * num_zeros
             
             gene_name_mean_coverage_dict[gene_name] = sum(coverage_list) / len(coverage_list)
             gene_name_to_median_coverage_dict[gene_name] = sorted(coverage_list)[len(coverage_list) // 2]
-            num_zeros = coverage_list.count(0)
-            gene_name_to_num_nucleotides_covered_dict[gene_name] = len(coverage_list) - num_zeros
+            gene_name_to_num_nucleotides_covered_dict[gene_name] = num_nucleotides_covered
 
     # convert the gene level ground truth to relative abundance
     total_num_reads = sum(gene_name_to_num_reads_dict.values())
@@ -271,7 +282,25 @@ def main():
         for genome_name in genome_names_used_in_simulation:
             bam_filename = get_bam_filename(outdir, simulation_directory_name, genome_name)
             bamfile = pysam.AlignmentFile(bam_filename, "rb")
+
+            # get coverage list
             coverage_list = [ pileupcolumn.n for pileupcolumn in bamfile.pileup() ]
+
+            # get reference names
+            reference_names = bamfile.references
+
+            # calculate total genome length by adding all reference lengths
+            genome_length = 0
+            for reference_name in reference_names:
+                genome_length += bamfile.get_reference_length(reference_name)
+
+            # calculate num zeros: genome length - num nucleotides covered
+            num_nucleotides_covered = sum(coverage_list)
+            num_zeros = genome_length - num_nucleotides_covered
+
+            # add zeros to the coverage list
+            coverage_list += [0] * num_zeros
+
             genome_cov_file.write(f'{genome_name},{sum(coverage_list) / len(coverage_list)},{sorted(coverage_list)[len(coverage_list) // 2]}\n')
 
 if __name__ == '__main__':
