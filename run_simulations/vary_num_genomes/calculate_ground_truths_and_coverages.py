@@ -16,25 +16,7 @@ def main():
 
     counter = 0
 
-    for num_genomes in [1, 2, 4]:
-        for i in range(num_simulations):
-            seed = i + 1
-            shell_script.write("python ../../run_camisim.py ")
-            shell_script.write(str(num_genomes) + " ")
-            shell_script.write("--seed " + str(seed) + " ")
-            shell_script.write("--size 0.1 ")
-            shell_script.write("--config config_" + str(num_genomes) + "_seed_" + str(seed) + ".ini ")
-            shell_script.write("--outdir out_" + str(num_genomes) + "_seed_" + str(seed) + " ")
-            shell_script.write("--gene_g_t gene_ground_truth_" + str(num_genomes) + "_seed_" + str(seed) + " ")
-            shell_script.write("--ko_g_t ko_ground_truth_" + str(num_genomes) + "_seed_" + str(seed) + " ")
-            shell_script.write("--metagenome_filename metagenome_" + str(num_genomes) + "_seed_" + str(seed) + ".fastq ")
-            shell_script.write("--genome_cov_file genome_coverages_" + str(num_genomes) + "_seed_" + str(seed) + " &\n")
-
-            counter += 1
-            if counter % 32 == 0:
-                shell_script.write("wait\n\n")
-
-    for num_genomes in [8, 16, 32, 64, 128, 256, 512, 1024]:
+    for num_genomes in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
         for i in range(num_simulations):
             seed = i + 1
             shell_script.write("python ../../calculate_ground_truth.py ")
