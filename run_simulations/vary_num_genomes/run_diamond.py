@@ -20,7 +20,7 @@ def main():
     for num_genomes in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
         for i in range(50):
             seed = i + 1
-            metagenome_filename = "metagenome_" + str(num_genomes) + "_seed_" + str(seed) + ".fastq"
+            metagenome_filename = "metagenomes/metagenome_" + str(num_genomes) + "_seed_" + str(seed) + ".fastq"
             diamond_output = "diamond_output/diamond_output_" + str(num_genomes) + "_seed_" + str(seed)
             gene_output = "diamond_output/diamond_gene_results_" + str(num_genomes) + "_seed_" + str(seed)
             ko_output = "diamond_output/diamond_ko_results_" + str(num_genomes) + "_seed_" + str(seed)
