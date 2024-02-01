@@ -18,7 +18,7 @@ def main():
     for num_genomes in [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]:
         for i in range(num_simulations):
             seed = i + 1
-            shell_script.write("python ../../run_camisim.py ")
+            shell_script.write("python ../../run_camisim.py " + str(num_genomes) + " ")
             shell_script.write("--outdir out_" + str(num_genomes) + "_seed_" + str(seed) + " ")
             shell_script.write("--gene_g_t gene_ground_truth_" + str(num_genomes) + "_seed_" + str(seed) + " ")
             shell_script.write("--ko_g_t ko_ground_truth_" + str(num_genomes) + "_seed_" + str(seed) + " ")
