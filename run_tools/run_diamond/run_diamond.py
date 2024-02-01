@@ -102,7 +102,7 @@ def postprocess(diamond_output, gene_output, ko_output):
     gene_id_to_num_reads = {}
     gene_id_to_num_nucleotides_covered = {}
     for mapped_gene, num_matches, num_mismatches in zip(mapped_genes_list, num_matches_list, num_mismatches_list):
-        gene_id = mapped_gene.split("|")
+        gene_id = mapped_gene.split("|")[0]
         if gene_id not in gene_id_to_num_reads.keys():
             gene_id_to_num_reads[gene_id] = 0
             gene_id_to_num_nucleotides_covered[gene_id] = 0
