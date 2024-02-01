@@ -153,9 +153,8 @@ def postprocess(diamond_output, gene_output, ko_output):
     
 
 def main():
-    parser = argparse.ArgumentParser(description="Run diamond with the given parameters.")
+    parser = argparse.ArgumentParser(description="Run diamond with the given parameters. Database here: /scratch/mbr5797/diamond_protein_ref_index/dmnd_ref_db.dmnd")
     parser.add_argument("query", help="The query file.")
-    parser.add_argument("db", help="The database file.")
     parser.add_argument("diamondout", help="The output file.")
     parser.add_argument("geneout", help="The gene relative abundance output file.")
     parser.add_argument("koout", help="The KO relative abundance output file.")
@@ -170,7 +169,8 @@ def main():
     args = parser.parse_args()
 
     # run diamond and store resource usages
-    run_diamond(args.query, args.db, args.diamondout, args.verbose, args.threads, args.max_target_seqs, args.outfmt, evalue = args.evalue, fastmode = args.fastmode, resourceout = args.resourceout)
+    db = "/scratch/mbr5797/diamond_protein_ref_index/dmnd_ref_db.dmnd"
+    run_diamond(args.query, db, args.diamondout, args.verbose, args.threads, args.max_target_seqs, args.outfmt, evalue = args.evalue, fastmode = args.fastmode, resourceout = args.resourceout)
     
     # postprocess the diamond output for gene and ko relative abundances
     postprocess(args.diamondout, args.geneout, args.koout)
