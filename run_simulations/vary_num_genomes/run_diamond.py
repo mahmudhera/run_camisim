@@ -34,3 +34,6 @@ def main():
             shell_script.write("--verbose\n")
 
     shell_script.close()
+
+if __name__:
+    main()
