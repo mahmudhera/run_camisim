@@ -25,7 +25,7 @@ def main():
             gene_output = "diamond_output/diamond_gene_results_" + str(num_genomes) + "_seed_" + str(seed)
             ko_output = "diamond_output/diamond_ko_results_" + str(num_genomes) + "_seed_" + str(seed)
             resource_output = "diamond_output/diamond_resource_usage_" + str(num_genomes) + "_seed_" + str(seed)
-            shell_script.write("python ../../run_diamond.py ")
+            shell_script.write("python ../../run_tools/run_diamond/run_diamond.py ")
             shell_script.write(metagenome_filename + " ")
             shell_script.write(diamond_output + " ")
             shell_script.write(gene_output + " ")
