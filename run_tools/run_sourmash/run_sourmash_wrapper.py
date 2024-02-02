@@ -30,7 +30,6 @@ if __name__=='__main__':
 
     # get the arguments, and then call run_sourmash_script.py
     ksize = str(args.ksize)
-    seed = str(args.seed)
     threshold_bp = str(args.threshold)
     metagenome_file = args.metagenome
     metagenome_name = metagenome_file.split('/')[-1]
@@ -42,7 +41,7 @@ if __name__=='__main__':
     metagenome_signature_file = metagenome_signature_name
 
     sourmash_running_script = '/scratch/mbr5797/run_camisim/run_tools/run_sourmash/run_sourmash_script.py'
-    cmd = '/usr/bin/time -v python ' + sourmash_running_script + ' --ksize ' + ksize + ' --seed ' + seed + ' --threshold ' + threshold_bp + ' --metagenome ' + metagenome_file + ' --kosig ' + ko_signature_filename + ' --gatherfile ' + gather_output_filename + ' --outfile ' + ko_abundance_filename + ' --scaled ' + scaled + ' --metagenome_sketch_name ' + metagenome_signature_name
+    cmd = '/usr/bin/time -v python ' + sourmash_running_script + ' --ksize ' + ksize + ' --threshold ' + threshold_bp + ' --metagenome ' + metagenome_file + ' --kosig ' + ko_signature_filename + ' --gatherfile ' + gather_output_filename + ' --outfile ' + ko_abundance_filename + ' --scaled ' + scaled + ' --metagenome_sketch_name ' + metagenome_signature_name
 
     start_time = time.time()
 
