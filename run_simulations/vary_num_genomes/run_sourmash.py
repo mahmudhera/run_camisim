@@ -50,8 +50,7 @@ def main():
             shell_script.write("--outfile " + ko_abund_file + " ")
             shell_script.write("--scaled 1000 ")
             shell_script.write("--metagenome_sketch_name " + metagenome_sketch_name + " ")
-            shell_script.write("--resource " + resource_file + " ")
-            shell_script.write("--verbose &\n")
+            shell_script.write("--resource " + resource_file + " &\n")
 
             counter += 1
 
@@ -69,8 +68,7 @@ def main():
             shell_script.write("--outfile " + ko_abund_file + " ")
             shell_script.write("--scaled 1000 ")
             shell_script.write("--metagenome_sketch_name " + metagenome_sketch_name + " ")
-            shell_script.write("--resource " + resource_file + " ")
-            shell_script.write("--verbose &\n")
+            shell_script.write("--resource " + resource_file + " &\n")
 
             counter += 1
 
