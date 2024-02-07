@@ -37,10 +37,10 @@ def main():
             metagenome_filename = "metagenomes/metagenome_" + str(num_genomes) + "_seed_" + str(seed) + ".fastq"
             
             # ksize = 11
-            gather_file = "sourmash_output/gather_output_" + str(num_genomes) + "_seed_" + str(seed) + "_k_11"
-            ko_abund_file = "sourmash_output/ko_abund_output_" + str(num_genomes) + "_seed_" + str(seed) + "_k_11"
-            resource_file = "sourmash_output/resource_usage_" + str(num_genomes) + "_seed_" + str(seed) + "_k_11"
-            metagenome_sketch_name = "sourmash_output/metagenome_sketch_" + str(num_genomes) + "_seed_" + str(seed) + "_k_11"
+            gather_file = "sourmash_sensitive_output/gather_output_" + str(num_genomes) + "_seed_" + str(seed) + "_k_11"
+            ko_abund_file = "sourmash_sensitive_output/ko_abund_output_" + str(num_genomes) + "_seed_" + str(seed) + "_k_11"
+            resource_file = "sourmash_sensitive_output/resource_usage_" + str(num_genomes) + "_seed_" + str(seed) + "_k_11"
+            metagenome_sketch_name = "sourmash_sensitive_output/metagenome_sketch_" + str(num_genomes) + "_seed_" + str(seed) + "_k_11"
             shell_script.write("python ../../run_tools/run_sourmash/run_sourmash_wrapper.py ")
             shell_script.write("--ksize 11 ")
             shell_script.write("--threshold 100 ")
@@ -55,10 +55,10 @@ def main():
             counter += 1
 
             # ksize = 15
-            gather_file = "sourmash_output/gather_output_" + str(num_genomes) + "_seed_" + str(seed) + "_k_15"
-            ko_abund_file = "sourmash_output/ko_abund_output_" + str(num_genomes) + "_seed_" + str(seed) + "_k_15"
-            resource_file = "sourmash_output/resource_usage_" + str(num_genomes) + "_seed_" + str(seed) + "_k_15"
-            metagenome_sketch_name = "sourmash_output/metagenome_sketch_" + str(num_genomes) + "_seed_" + str(seed) + "_k_15"
+            gather_file = "sourmash_sensitive_output/gather_output_" + str(num_genomes) + "_seed_" + str(seed) + "_k_15"
+            ko_abund_file = "sourmash_sensitive_output/ko_abund_output_" + str(num_genomes) + "_seed_" + str(seed) + "_k_15"
+            resource_file = "sourmash_sensitive_output/resource_usage_" + str(num_genomes) + "_seed_" + str(seed) + "_k_15"
+            metagenome_sketch_name = "sourmash_sensitive_output/metagenome_sketch_" + str(num_genomes) + "_seed_" + str(seed) + "_k_15"
             shell_script.write("python ../../run_tools/run_sourmash/run_sourmash_wrapper.py ")
             shell_script.write("--ksize 15 ")
             shell_script.write("--threshold 100 ")

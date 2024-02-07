@@ -48,6 +48,7 @@ if __name__=='__main__':
     # redirect stderr to STDOUT, and call the cmd using subprocess.check_output
     output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
     output = output.decode("utf-8")
+    print(output)
     output = output.split('\n')
 
     end_time = time.time()
