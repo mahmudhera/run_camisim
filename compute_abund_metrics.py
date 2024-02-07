@@ -53,9 +53,8 @@ def main():
         else:
             predicted_abundances.append(0)
 
-
     # compute pearson correlation coefficient between ground truth and predictions
-    pearson_corr = np.corrcoef(ground_truth_abundances, predicted_abundances)[0,1]
+    pearson_corr = np.corrcoef(ground_truth_abundances, predicted_abundances)[0]
 
     # write pearson correlation coefficient to output file
     with open(args.output, 'w') as f:
