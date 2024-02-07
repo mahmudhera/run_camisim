@@ -25,6 +25,7 @@ def main():
     parser.add_argument('ground_truth', type=str, help='Path to KO ground truth')
     parser.add_argument('predictions', type=str, help='Path to KO predictions')
     parser.add_argument('output', type=str, help='Path to output file')
+    parser.add_argument('--toolname', type=str, help='Name of tool used to generate predictions', default='diamond')
     args = parser.parse_args()
 
     # Read in the KO ground truth, headers: ko_id,abund_by_num_reads,abund_by_num_nts,abund_by_mean_cov,abund_by_med_cov
@@ -34,7 +35,11 @@ def main():
     # Read in the KO predictions, ko_id,num_reads,num_nucleotides_covered,relative_abundance_by_num_reads,relative_abundance_by_nucleotides_covered
     predictions = pd.read_csv(args.predictions, sep=',')
     predicted_kos = predictions['ko_id'].tolist()
-    relative_abundances = predictions['relative_abundance_by_num_reads'].tolist()
+    if args.toolname == 'sourmash':
+        colname = 'abundance'
+    if args.toolname == 'diamond':
+        colname = 'relative_abundance_by_num_reads'
+    relative_abundances = predictions[colname].tolist()
 
     # Sort the KO predictions by relative abundance (highest to lowest)
     sorted_indices = np.argsort(relative_abundances)[::-1]
