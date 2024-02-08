@@ -20,6 +20,7 @@ import numpy as np
 import argparse
 from scipy.stats import kendalltau
 from scipy.special import rel_entr
+from scipy.spatial.distance import braycurtis
 
 def main():
     # parse command line arguments
@@ -80,6 +81,9 @@ def main():
     abund_of_common_kos_in_pred = [relative_abundances[sorted_kos_predictions.index(ko)] for ko in common_kos_sorted_pred]
     pearson_corr = np.corrcoef(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred)[0, 1]
 
+    # compute bray-curtis distance of the ground truth and predictions for common kos
+    bray_curtis_common = braycurtis(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred)
+
     # normalize the abundances of the common kos in the ground truth and predictions
     abund_of_common_kos_in_gt = np.array(abund_of_common_kos_in_gt) / sum(abund_of_common_kos_in_gt)
     abund_of_common_kos_in_pred = np.array(abund_of_common_kos_in_pred) / sum(abund_of_common_kos_in_pred)
@@ -128,11 +132,11 @@ def main():
 
     # write headers to output file
     with open(args.output, 'w') as f:
-        f.write('purity,completeness,kendalltau,pearsonr_common,pearsonr_all,wt_purity,wt_completeness,kl_div_common_gt_to_pred,kl_div_common_pred_to_gt\n')
+        f.write('purity,completeness,kendalltau,pearsonr_common,pearsonr_all,wt_purity,wt_completeness,kl_div_common_gt_to_pred,kl_div_common_pred_to_gt,bray_curtis\n')
 
     # Write precision, recall, and tau to output file
     with open(args.output, 'a') as f:
-        f.write(f'{purity},{completeness},{tau},{pearson_corr},{pearson_corr_all},{weighted_purity},{weighted_completeness},{kl_div_common_gt_to_pred},{kl_div_common_pred_to_gt}\n')
+        f.write(f'{purity},{completeness},{tau},{pearson_corr},{pearson_corr_all},{weighted_purity},{weighted_completeness},{kl_div_common_gt_to_pred},{kl_div_common_pred_to_gt},{bray_curtis_common}\n')
 
 if __name__ == '__main__':
     main()
