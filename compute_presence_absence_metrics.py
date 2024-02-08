@@ -46,7 +46,7 @@ def main():
     if args.toolname == 'sourmash':
         colname = 'abundance'
     if args.toolname == 'diamond':
-        colname = 'relative_abundance_by_num_reads'
+        colname = 'relative_abundance_by_nucleotides_covered'
     relative_abundances = predictions[colname].tolist()
 
     # Sort the KO predictions by relative abundance (highest to lowest)
@@ -116,10 +116,6 @@ def main():
     # compute pearson corr coeff of these abundances
     pearson_corr_all = np.corrcoef(all_kos_abundances_gt, all_kos_abundances_pred)[0, 1]
 
-    # compute the kl divergence of all kos
-    kl_div_all_gt_to_pred = sum( rel_entr(all_kos_abundances_gt, all_kos_abundances_pred) )
-    kl_div_all_pred_to_gt = sum( rel_entr(all_kos_abundances_pred, all_kos_abundances_gt) )
-
     # write as completeness and purity
     completeness = recall
     purity = precision
@@ -128,11 +124,11 @@ def main():
 
     # write headers to output file
     with open(args.output, 'w') as f:
-        f.write('purity,completeness,kendalltau,pearsonr_common,pearsonr_all,wt_purity,wt_completeness,kl_div_common_gt_to_pred,kl_div_common_pred_to_gt,kl_div_all_gt_to_pred,kl_div_all_pred_to_gt\n')
+        f.write('purity,completeness,kendalltau,pearsonr_common,pearsonr_all,wt_purity,wt_completeness,kl_div_common_gt_to_pred,kl_div_common_pred_to_gt\n')
 
     # Write precision, recall, and tau to output file
     with open(args.output, 'a') as f:
-        f.write(f'{purity},{completeness},{tau},{pearson_corr},{pearson_corr_all},{weighted_purity},{weighted_completeness},{kl_div_common_gt_to_pred},{kl_div_common_pred_to_gt},{kl_div_all_gt_to_pred},{kl_div_all_pred_to_gt}\n')
+        f.write(f'{purity},{completeness},{tau},{pearson_corr},{pearson_corr_all},{weighted_purity},{weighted_completeness},{kl_div_common_gt_to_pred},{kl_div_common_pred_to_gt}\n')
 
 if __name__ == '__main__':
     main()
