@@ -31,11 +31,12 @@ def main():
     # Read in the KO ground truth, headers: ko_id,abund_by_num_reads,abund_by_num_nts,abund_by_mean_cov,abund_by_med_cov
     ground_truth = pd.read_csv(args.ground_truth, sep=',')
     ground_truth_kos = set(ground_truth['ko_id'])
+    ground_truth_kos_list = ground_truth['ko_id'].tolist()
     ground_truth_abundances = ground_truth['abund_by_num_reads'].tolist()
 
     # Sort the KO ground truth by abundance (highest to lowest)
     sorted_indices = np.argsort(ground_truth_abundances)[::-1]
-    sorted_kos_ground_truth = [ground_truth_kos[i] for i in sorted_indices]
+    sorted_kos_ground_truth = [ground_truth_kos_list[i] for i in sorted_indices]
 
     # Read in the KO predictions, ko_id,num_reads,num_nucleotides_covered,relative_abundance_by_num_reads,relative_abundance_by_nucleotides_covered
     predictions = pd.read_csv(args.predictions, sep=',')
