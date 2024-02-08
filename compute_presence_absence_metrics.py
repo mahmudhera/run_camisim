@@ -53,10 +53,6 @@ def main():
     sorted_kos_predictions = [predicted_kos[i] for i in sorted_indices]
     predicted_kos_set = set(sorted_kos_predictions)
 
-    # write headers to output file
-    with open(args.output, 'w') as f:
-        f.write('purity,completeness,kendalltau\n')
-
     # Compute precision and recall
     true_positives = len(ground_truth_kos_set.intersection(predicted_kos_set))
     false_positives = len(predicted_kos_set) - true_positives
@@ -78,13 +74,36 @@ def main():
     # compute kendall tau using sorted_kos_ground_truth and most_abundant_kos_list
     tau, p_value = kendalltau(common_kos_sorted_gt, common_kos_sorted_pred)
 
+    # compute the pearson correlation of the ground truth and predictions for common kos
+    abund_of_common_kos_in_gt = [ground_truth_abundances[ground_truth_kos_list.index(ko)] for ko in common_kos_sorted_gt]
+    abund_of_common_kos_in_pred = [relative_abundances[sorted_kos_predictions.index(ko)] for ko in common_kos_sorted_pred]
+    pearson_corr = np.corrcoef(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred)[0, 1]
+    
+    # compute what percentage of the ground truth kos are in the predictions using ground truth abundances
+    percent_of_gt_in_pred = 0.0
+    for ko in ground_truth_kos_set:
+        if ko in predicted_kos_set:
+            percent_of_gt_in_pred += ground_truth_abundances[ground_truth_kos_list.index(ko)]
+
+    # compute what percentage of the predictions are in the ground truth using predicted abundances
+    percent_of_pred_in_gt = 0.0
+    for ko in predicted_kos_set:
+        if ko in ground_truth_kos_set:
+            percent_of_pred_in_gt += relative_abundances[sorted_kos_predictions.index(ko)]
+
     # write as completeness and purity
     completeness = recall
     purity = precision
+    weighted_completeness = percent_of_gt_in_pred
+    weighted_purity = percent_of_pred_in_gt
+
+    # write headers to output file
+    with open(args.output, 'w') as f:
+        f.write('purity,completeness,kendalltau,pearsonr,wt_purity,wt_completeness\n')
 
     # Write precision, recall, and tau to output file
     with open(args.output, 'a') as f:
-        f.write(f'{purity},{completeness},{tau}\n')
+        f.write(f'{purity},{completeness},{tau},{pearson_corr},{weighted_purity},{weighted_completeness}\n')
 
 if __name__ == '__main__':
     main()
