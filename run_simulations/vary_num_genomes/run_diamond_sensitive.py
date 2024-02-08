@@ -35,7 +35,7 @@ def main():
             shell_script.write("--verbose --sensitive &\n")
 
             counter += 1
-            if counter % 64 == 0:
+            if counter % 4 == 0:
                 shell_script.write("wait\n")
 
     shell_script.close()
