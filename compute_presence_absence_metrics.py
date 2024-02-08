@@ -31,6 +31,11 @@ def main():
     # Read in the KO ground truth, headers: ko_id,abund_by_num_reads,abund_by_num_nts,abund_by_mean_cov,abund_by_med_cov
     ground_truth = pd.read_csv(args.ground_truth, sep=',')
     ground_truth_kos = set(ground_truth['ko_id'])
+    ground_truth_abundances = ground_truth['abund_by_num_reads'].tolist()
+
+    # Sort the KO ground truth by abundance (highest to lowest)
+    sorted_indices = np.argsort(ground_truth_abundances)[::-1]
+    sorted_kos_ground_truth = [ground_truth_kos[i] for i in sorted_indices]
 
     # Read in the KO predictions, ko_id,num_reads,num_nucleotides_covered,relative_abundance_by_num_reads,relative_abundance_by_nucleotides_covered
     predictions = pd.read_csv(args.predictions, sep=',')
@@ -55,11 +60,13 @@ def main():
     for filter_level in filter_levels:
         # Filter the KO predictions so that the sum of rel abund of the filtered KOs make up top filter_level% of predictions
         top_kos = set()
+        most_abundant_kos_list = []
         top_rel_abund = 0.0
         for ko, rel_abund in zip(sorted_kos, sorted_relative_abundances):
             if top_rel_abund < filter_level:
                 top_kos.add(ko)
                 top_rel_abund += rel_abund
+                most_abundant_kos_list.append(ko)
             else:
                 break
         filtered_kos = top_kos
@@ -71,13 +78,16 @@ def main():
         precision = true_positives / (true_positives + false_positives)
         recall = true_positives / (true_positives + false_negatives)
 
+        # compute kendall tau using sorted_kos_ground_truth and most_abundant_kos_list
+        tau, p_value = kendalltau(sorted_kos_ground_truth, most_abundant_kos_list)
+
         # write as completeness and purity
         completeness = recall
         purity = precision
 
-        # Write precision and recall to output file
+        # Write precision, recall, and tau to output file
         with open(args.output, 'a') as f:
-            f.write(f'{purity},{completeness}\n')
+            f.write(f'{purity},{completeness},{tau}\n')
 
 if __name__ == '__main__':
     main()
