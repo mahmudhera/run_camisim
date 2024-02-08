@@ -19,6 +19,7 @@ import pandas as pd
 import numpy as np
 import argparse
 from scipy.stats import kendalltau
+from scipy.special import rel_entr
 
 def main():
     # parse command line arguments
@@ -78,7 +79,12 @@ def main():
     abund_of_common_kos_in_gt = [ground_truth_abundances[ground_truth_kos_list.index(ko)] for ko in common_kos_sorted_gt]
     abund_of_common_kos_in_pred = [relative_abundances[sorted_kos_predictions.index(ko)] for ko in common_kos_sorted_pred]
     pearson_corr = np.corrcoef(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred)[0, 1]
+
+    # compute the kl divergence of the ground truth and predictions for common kos using scipy.special.rel_entr
+    kl_div_common_gt_to_pred = sum( rel_entr(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred) )
+    kl_div_common_pred_to_gt = sum( rel_entr(abund_of_common_kos_in_pred, abund_of_common_kos_in_gt) )
     
+
     # compute what percentage of the ground truth kos are in the predictions using ground truth abundances
     percent_of_gt_in_pred = 0.0
     for ko in ground_truth_kos_set:
@@ -91,6 +97,29 @@ def main():
         if ko in ground_truth_kos_set:
             percent_of_pred_in_gt += relative_abundances[sorted_kos_predictions.index(ko)]
 
+    # create a set of all kos in the ground truth and predictions
+    all_kos_union = ground_truth_kos_set.union(predicted_kos_set)
+
+    # create a list of abundances for all kos in the ground truth and predictions
+    all_kos_abundances_gt = []
+    all_kos_abundances_pred = []
+    for ko in all_kos_union:
+        if ko in ground_truth_kos_set:
+            all_kos_abundances_gt.append(ground_truth_abundances[ground_truth_kos_list.index(ko)])
+        else:
+            all_kos_abundances_gt.append(0)
+        if ko in predicted_kos_set:
+            all_kos_abundances_pred.append(relative_abundances[sorted_kos_predictions.index(ko)])
+        else:
+            all_kos_abundances_pred.append(0)
+
+    # compute pearson corr coeff of these abundances
+    pearson_corr_all = np.corrcoef(all_kos_abundances_gt, all_kos_abundances_pred)[0, 1]
+
+    # compute the kl divergence of all kos
+    kl_div_all_gt_to_pred = sum( rel_entr(all_kos_abundances_gt, all_kos_abundances_pred) )
+    kl_div_all_pred_to_gt = sum( rel_entr(all_kos_abundances_pred, all_kos_abundances_gt) )
+
     # write as completeness and purity
     completeness = recall
     purity = precision
@@ -99,11 +128,11 @@ def main():
 
     # write headers to output file
     with open(args.output, 'w') as f:
-        f.write('purity,completeness,kendalltau,pearsonr,wt_purity,wt_completeness\n')
+        f.write('purity,completeness,kendalltau,pearsonr_common,pearsonr_all,wt_purity,wt_completeness,kl_div_common_gt_to_pred,kl_div_common_pred_to_gt,kl_div_all_gt_to_pred,kl_div_all_pred_to_gt\n')
 
     # Write precision, recall, and tau to output file
     with open(args.output, 'a') as f:
-        f.write(f'{purity},{completeness},{tau},{pearson_corr},{weighted_purity},{weighted_completeness}\n')
+        f.write(f'{purity},{completeness},{tau},{pearson_corr},{pearson_corr_all},{weighted_purity},{weighted_completeness},{kl_div_common_gt_to_pred},{kl_div_common_pred_to_gt},{kl_div_all_gt_to_pred},{kl_div_all_pred_to_gt}\n')
 
 if __name__ == '__main__':
     main()
