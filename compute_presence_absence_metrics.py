@@ -18,6 +18,7 @@ Workflow:
 import pandas as pd
 import numpy as np
 import argparse
+from scipy.stats import kendalltau
 
 def main():
     # parse command line arguments
