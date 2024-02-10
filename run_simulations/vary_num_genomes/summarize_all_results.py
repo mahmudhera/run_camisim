@@ -74,7 +74,8 @@ for ng in num_genomes:
             df = pd.read_csv(sourmash_file_11)
             df['num_genomes'] = ng
             df['tool'] = 'sourmash,k=11'
-            performance_metrics = performance_metrics.append(df, ignore_index=True)
+            performance_metrics = pd.concat( [performance_metrics, df], ignore_index=True)
+            
         sourmash_file_15 = "sourmash_output/sourmash_performance_metrics_" + str(ng) + "_seed_" + str(s) + "_k_15"
         if os.path.exists(sourmash_file_15):
             df = pd.read_csv(sourmash_file_15)
