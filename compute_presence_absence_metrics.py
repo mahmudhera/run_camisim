@@ -81,12 +81,12 @@ def main():
     abund_of_common_kos_in_pred = [relative_abundances[sorted_kos_predictions.index(ko)] for ko in common_kos_sorted_pred]
     pearson_corr = np.corrcoef(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred)[0, 1]
 
-    # compute bray-curtis distance of the ground truth and predictions for common kos
-    bray_curtis_common = braycurtis(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred)
-
     # normalize the abundances of the common kos in the ground truth and predictions
     abund_of_common_kos_in_gt = np.array(abund_of_common_kos_in_gt) / sum(abund_of_common_kos_in_gt)
     abund_of_common_kos_in_pred = np.array(abund_of_common_kos_in_pred) / sum(abund_of_common_kos_in_pred)
+
+    # compute bray-curtis distance of the ground truth and predictions for common kos
+    bray_curtis_common = braycurtis(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred)
 
     # compute the kl divergence of the ground truth and predictions for common kos using scipy.special.rel_entr
     kl_div_common_gt_to_pred = sum( rel_entr(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred) )
