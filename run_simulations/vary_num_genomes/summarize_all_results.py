@@ -80,7 +80,7 @@ for ng in num_genomes:
             df = pd.read_csv(sourmash_file_15)
             df['num_genomes'] = ng
             df['tool'] = 'sourmash,k=15'
-            performance_metrics = performance_metrics.append(df, ignore_index=True)
+            performance_metrics = pd.concat( [performance_metrics, df], ignore_index=True)
 
 # compute the mean and standard deviation of the performance metrics
 mean_performance_metrics = performance_metrics.groupby(['num_genomes', 'tool']).mean().reset_index()
@@ -102,7 +102,7 @@ for ng in num_genomes:
             df.columns = ['walltime', 'cputime', 'max_rss', 'avg_rss']
             df['num_genomes'] = ng
             df['tool'] = 'diamond_fast'
-            resources_used = resources_used.append(df, ignore_index=True)
+            resources_used = pd.concat( [resources_used, df], ignore_index=True)
 
 # read the resources used by diamond sensitive
 for ng in num_genomes:
@@ -113,7 +113,7 @@ for ng in num_genomes:
             df.columns = ['walltime', 'cputime', 'max_rss', 'avg_rss']
             df['num_genomes'] = ng
             df['tool'] = 'diamond_sensitive'
-            resources_used = resources_used.append(df, ignore_index=True)
+            resources_used = pd.concat( [resources_used, df], ignore_index=True)
 
 # read the resources used by sourmash for k = 11 and k = 15
 for ng in num_genomes:
@@ -124,14 +124,15 @@ for ng in num_genomes:
             df.columns = ['walltime', 'cputime', 'max_rss', 'avg_rss']
             df['num_genomes'] = ng
             df['tool'] = 'sourmash,k=11'
-            resources_used = resources_used.append(df, ignore_index=True)
+            resources_used = pd.concat( [resources_used, df], ignore_index=True)
+
         sourmash_file_15 = "sourmash_output/resource_usage_" + str(ng) + "_seed_" + str(s) + "_k_15"
         if os.path.exists(sourmash_file_15):
             df = pd.read_csv(sourmash_file_15, header=None)
             df.columns = ['walltime', 'cputime', 'max_rss', 'avg_rss']
             df['num_genomes'] = ng
             df['tool'] = 'sourmash,k=15'
-            resources_used = resources_used.append(df, ignore_index=True)
+            resources_used = pd.concat( [resources_used, df], ignore_index=True)
 
 # compute the mean and standard deviation of the resources used
 mean_resources_used = resources_used.groupby(['num_genomes', 'tool']).mean().reset_index()
