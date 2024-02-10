@@ -54,7 +54,7 @@ for ng in num_genomes:
             df = pd.read_csv(diamond_fast_file)
             df['num_genomes'] = ng
             df['tool'] = 'diamond_fast'
-            performance_metrics = performance_metrics.append(df, ignore_index=True)
+            performance_metrics = pd.concat( [performance_metrics, df], ignore_index=True)
 
 # read the performance metrics for diamond sensitive
 for ng in num_genomes:
