@@ -41,7 +41,7 @@ num_runs = 50
 seed = list(range(1, num_runs + 1))
 
 # create a dataframe to store the performance metrics
-performance_metrics = pd.DataFrame(columns=['purity', 'completeness', 'kendalltau', 'pearsonr_common', 'pearsonr_all', 'wt_purity', 'wt_completeness', 'kl_div_common_gt_to_pred', 'kl_div_common_pred_to_gt', 'bray_curtis', 'num_genomes', 'tool'])
+performance_metrics = pd.DataFrame(columns=['purity', 'completeness', 'kendalltau', 'pearsonr_common', 'pearsonr_all', 'wt_purity', 'wt_completeness', 'kl_div_common_gt_to_pred', 'kl_div_common_pred_to_gt', 'bray_curtis', 'size', 'tool'])
 
 # read the performance metrics for diamond fast
 for size in sizes:
@@ -49,7 +49,7 @@ for size in sizes:
         diamond_fast_file = "diamond_fast_output/diamond_performance_metrics_" + str(size) + "_seed_" + str(s)
         if os.path.exists(diamond_fast_file):
             df = pd.read_csv(diamond_fast_file)
-            df['num_genomes'] = size
+            df['size'] = size
             df['tool'] = 'diamond_fast'
             performance_metrics = pd.concat( [performance_metrics, df], ignore_index=True)
 
@@ -60,20 +60,20 @@ for size in sizes:
             sourmash_file = "sourmash_output/sourmash_performance_metrics_" + str(size) + "_seed_" + str(s) + "_k_" + str(ksize)
             if os.path.exists(sourmash_file):
                 df = pd.read_csv(sourmash_file)
-                df['num_genomes'] = size
+                df['size'] = size
                 df['tool'] = 'sourmash,k=' + str(ksize)
                 performance_metrics = pd.concat( [performance_metrics, df], ignore_index=True)
 
 # compute the mean and standard deviation of the performance metrics
-mean_performance_metrics = performance_metrics.groupby(['num_genomes', 'tool']).mean().reset_index()
-std_performance_metrics = performance_metrics.groupby(['num_genomes', 'tool']).std().reset_index()
+mean_performance_metrics = performance_metrics.groupby(['size', 'tool']).mean().reset_index()
+std_performance_metrics = performance_metrics.groupby(['size', 'tool']).std().reset_index()
 
 # write the mean and standard deviation to a file
 mean_performance_metrics.to_csv('mean_performance_metrics.csv', index=False)
 std_performance_metrics.to_csv('std_performance_metrics.csv', index=False)
 
 # create a dataframe to store the resources used
-resources_used = pd.DataFrame(columns=['walltime', 'cputime', 'max_rss', 'avg_rss', 'num_genomes', 'tool'])
+resources_used = pd.DataFrame(columns=['walltime', 'cputime', 'max_rss', 'avg_rss', 'size', 'tool'])
 
 # read the resources used by diamond fast
 for size in sizes:
@@ -82,7 +82,7 @@ for size in sizes:
         if os.path.exists(diamond_fast_file):
             df = pd.read_csv(diamond_fast_file, header=None)
             df.columns = ['walltime', 'cputime', 'max_rss', 'avg_rss']
-            df['num_genomes'] = size
+            df['size'] = size
             df['tool'] = 'diamond_fast'
             resources_used = pd.concat( [resources_used, df], ignore_index=True)
 
@@ -94,13 +94,13 @@ for size in sizes:
             if os.path.exists(sourmash_file):
                 df = pd.read_csv(sourmash_file, header=None)
                 df.columns = ['walltime', 'cputime', 'max_rss', 'avg_rss']
-                df['num_genomes'] = size
+                df['size'] = size
                 df['tool'] = 'sourmash,k=' + str(ksize)
                 resources_used = pd.concat( [resources_used, df], ignore_index=True)
 
 # compute the mean and standard deviation of the resources used
-mean_resources_used = resources_used.groupby(['num_genomes', 'tool']).mean().reset_index()
-std_resources_used = resources_used.groupby(['num_genomes', 'tool']).std().reset_index()
+mean_resources_used = resources_used.groupby(['size', 'tool']).mean().reset_index()
+std_resources_used = resources_used.groupby(['size', 'tool']).std().reset_index()
 
 # write the mean and standard deviation to a file
 mean_resources_used.to_csv('mean_resources_used.csv', index=False)
