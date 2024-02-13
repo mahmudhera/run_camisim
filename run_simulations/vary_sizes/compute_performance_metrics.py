@@ -53,7 +53,7 @@ for size in sizes:
     for s in seed:
         for ksize in [11, 15]:
             ground_truth_ko_file = "ko_ground_truths/ko_ground_truth_" + str(size) + "_seed_" + str(s)
-            predicted_ko_file = "ko_abund_output_" + str(size) + "_seed_" + str(s) + "_k_" + str(ksize)
+            predicted_ko_file = "sourmash_output/ko_abund_" + str(size) + "_seed_" + str(s) + "_k_" + str(ksize)
             output_file = "sourmash_output/sourmash_performance_metrics_" + str(size) + "_seed_" + str(s) + "_k_" + str(ksize)
             try:
                 os.system("python ../../compute_presence_absence_metrics.py " + ground_truth_ko_file + " " + predicted_ko_file + " " + output_file + " --toolname sourmash")
