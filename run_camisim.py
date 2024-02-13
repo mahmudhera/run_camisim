@@ -90,6 +90,7 @@ def main():
     if type_name == 'wgsim':
         config.set('ReadSimulator', 'type', 'wgsim')
         config.set('ReadSimulator', 'profile', str(error_rate))
+        config.set('ReadSimulator', 'readsim', '/home/grads/mbr5797/camisim/CAMISIM-1.3/tools/wgsim/wgsim')
 
     # section: community0
     config.set('community0', 'genomes_total', str(number_of_genomes))
