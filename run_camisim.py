@@ -54,6 +54,9 @@ def main():
     parser.add_argument('--ko_g_t', type=str, help='Ground truth file (Output)', default='./ko_ground_truth.csv')
     parser.add_argument('--metagenome_filename', type=str, help='Metagenome filename (Output)', default='./metagenome.fastq')
     parser.add_argument('--genome_cov_file', help='file where the genome coverages are written (Output)', default='./genome_coverages.csv')
+    parser.add_argument('-t', '--max_proc', type=int, help='Maximum number of processes to use', default=128)
+    parser.add_argument('-e', '--error_rate', type=float, help='Error rate to use in the simulation', default=0.00)
+    parser.add_argument('-n', '--type_name', type=str, help='Name type of read simulator', default='ART-Illumina')
     args = parser.parse_args()
 
     # read the arguments
@@ -68,6 +71,9 @@ def main():
     size = args.size
     gene_ground_truth_filename = args.gene_g_t
     ko_ground_truth_filename = args.ko_g_t
+    max_processors = args.max_proc
+    error_rate = args.error_rate
+    type_name = args.type_name
 
     # read the sample config file
     config = configparser.ConfigParser()
@@ -77,9 +83,13 @@ def main():
     # section: Main
     config.set('Main', 'seed', str(seed))
     config.set('Main', 'output_directory', outdir)
+    config.set('Main', 'max_processors', str(max_processors))
 
     # section: ReadSimulator
     config.set('ReadSimulator', 'size', str(size))
+    if type_name == 'wgsim':
+        config.set('ReadSimulator', 'type', 'wgsim')
+        config.set('ReadSimulator', 'profile', str(error_rate))
 
     # section: community0
     config.set('community0', 'genomes_total', str(number_of_genomes))
