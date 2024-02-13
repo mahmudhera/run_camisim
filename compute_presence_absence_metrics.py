@@ -97,13 +97,13 @@ def main():
     percent_of_gt_in_pred = 0.0
     for ko in ground_truth_kos_set:
         if ko in predicted_kos_set:
-            percent_of_gt_in_pred += ground_truth_abundances[ground_truth_kos_list.index(ko)]
+            percent_of_gt_in_pred += min( ground_truth_abundances[ground_truth_kos_list.index(ko)], relative_abundances[sorted_kos_predictions.index(ko)] )
 
     # compute what percentage of the predictions are in the ground truth using predicted abundances
     percent_of_pred_in_gt = 0.0
     for ko in predicted_kos_set:
         if ko in ground_truth_kos_set:
-            percent_of_pred_in_gt += relative_abundances[sorted_kos_predictions.index(ko)]
+            percent_of_pred_in_gt += min( ground_truth_abundances[ground_truth_kos_list.index(ko)], relative_abundances[sorted_kos_predictions.index(ko)] )
 
     # create a set of all kos in the ground truth and predictions
     all_kos_union = ground_truth_kos_set.union(predicted_kos_set)
