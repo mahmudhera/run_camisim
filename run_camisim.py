@@ -57,10 +57,13 @@ def main():
     parser.add_argument('-t', '--max_proc', type=int, help='Maximum number of processes to use', default=128)
     parser.add_argument('-e', '--error_rate', type=float, help='Error rate to use in the simulation', default=0.00)
     parser.add_argument('-n', '--type_name', type=str, help='Name type of read simulator', default='ART-Illumina')
+    parser.add_argument('-v', '--num_novel', type=int, help='Number of novel genomes to add', default=0)
     args = parser.parse_args()
 
     # read the arguments
     number_of_genomes = args.number_of_genomes
+    number_of_novel_genomes = args.num_novel
+    number_of_real_genomes = max(number_of_genomes - number_of_novel_genomes, 0)
     if args.config:
         config_filename = args.config
     else:
@@ -94,7 +97,7 @@ def main():
 
     # section: community0
     config.set('community0', 'genomes_total', str(number_of_genomes))
-    config.set('community0', 'genomes_real', str(number_of_genomes))
+    config.set('community0', 'genomes_real', str(number_of_real_genomes))
     config.set('community0', 'metadata', metadata_filename)
     config.set('community0', 'id_to_genome_file', genome_to_id_filename)
 

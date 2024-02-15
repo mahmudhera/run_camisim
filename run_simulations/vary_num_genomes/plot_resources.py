@@ -65,5 +65,5 @@ for i, metric in enumerate(resource_metrics, 1):
     plt.legend(title='Tool')
 
 plt.tight_layout()
-#plt.savefig('resources.pdf')
-plt.show()
+plt.savefig('resources.pdf')
+#plt.show()
