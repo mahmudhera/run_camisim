@@ -45,10 +45,6 @@ for error_rate in error_rates:
         progress += 1
         print("Progress: " + str(progress) + " / " + str(len(error_rates) * len(seed)))
 
-        if progress % 255 == 0:
-            os.system("wait")
-
-
 # invoke runs for sourmash, k=11,15
 print("Invoking runs for sourmash")
 progress = 0
@@ -64,6 +60,3 @@ for error_rate in error_rates:
                 print("Error encountered for size: " + str(error_rate) + " seed: " + str(s) + " ksize: " + str(ksize))
             progress += 1
             print("Progress: " + str(progress) + " / " + str(len(error_rates) * len(seed) * 2))
-
-            if progress % 255 == 0:
-                os.system("wait")
