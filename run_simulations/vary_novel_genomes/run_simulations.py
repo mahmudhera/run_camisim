@@ -30,7 +30,7 @@ def main():
 
     num_novel_genomes = [0, 2, 4, 8, 16, 32]
     for num_novel_genome in num_novel_genomes:
-        for i in range(1, num_simulations+1):
+        for i in range(num_simulations):
             seed = 1 + i
             outdir = f'out_{num_novel_genome}_seed_{seed}'
             gene_ground_truth = f'gene_ground_truth_{num_novel_genome}_seed_{seed}'
