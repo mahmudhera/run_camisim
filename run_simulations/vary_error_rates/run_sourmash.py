@@ -59,4 +59,7 @@ def main():
                     shell_script.write("wait\n")
 
     shell_script.close()
-    
+
+
+if __name__ == "__main__":
+    main()
