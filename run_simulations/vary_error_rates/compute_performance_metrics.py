@@ -43,7 +43,7 @@ for error_rate in error_rates:
         except:
             print("Error encountered for size: " + str(error_rate) + " seed: " + str(s))
         progress += 1
-        print("Progress: " + str(progress) + " / " + str(len(error_rate) * len(seed)))
+        print("Progress: " + str(progress) + " / " + str(len(error_rates) * len(seed)))
 
         if progress % 255 == 0:
             os.system("wait")
@@ -63,7 +63,7 @@ for error_rate in error_rates:
             except:
                 print("Error encountered for size: " + str(error_rate) + " seed: " + str(s) + " ksize: " + str(ksize))
             progress += 1
-            print("Progress: " + str(progress) + " / " + str(len(error_rate) * len(seed) * 2))
+            print("Progress: " + str(progress) + " / " + str(len(error_rates) * len(seed) * 2))
 
             if progress % 255 == 0:
                 os.system("wait")
