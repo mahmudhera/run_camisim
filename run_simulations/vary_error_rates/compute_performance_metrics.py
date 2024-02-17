@@ -59,7 +59,7 @@ for error_rate in error_rates:
             predicted_ko_file = "sourmash_output/ko_abund_" + str(error_rate) + "_seed_" + str(s) + "_k_" + str(ksize)
             output_file = "sourmash_output/sourmash_performance_metrics_" + str(error_rate) + "_seed_" + str(s) + "_k_" + str(ksize)
             try:
-                os.system("python ../../compute_presence_absence_metrics.py " + ground_truth_ko_file + " " + predicted_ko_file + " " + output_file + " --toolname sourmash")
+                os.system("python ../../compute_presence_absence_metrics.py " + ground_truth_ko_file + " " + predicted_ko_file + " " + output_file + " --toolname sourmash &")
             except:
                 print("Error encountered for size: " + str(error_rate) + " seed: " + str(s) + " ksize: " + str(ksize))
             progress += 1
