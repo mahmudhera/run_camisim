@@ -36,7 +36,7 @@ def main():
     counter = 0
     for error_rate in [0.00, 0.01, 0.02, 0.03, 0.04, 0.05]:
         for i in range(30):
-            seed = i + 1
+            seed = i + 2
             metagenome_filename = "metagenomes/metagenome_" + str(error_rate) + "_seed_" + str(seed) + ".fastq"
             for ksize in [11, 15]:
                 gather_file = "sourmash_output/sourmash_gather_" + str(error_rate) + "_seed_" + str(seed) + "_k_" + str(ksize)
