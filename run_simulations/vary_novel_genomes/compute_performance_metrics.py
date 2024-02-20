@@ -59,4 +59,4 @@ for num_novel in num_novel_genomes:
             except:
                 print("Error encountered for size: " + str(num_novel) + " seed: " + str(s) + " ksize: " + str(ksize))
             progress += 1
-            print("Progress: " + str(progress) + " / " + str(len(num_novel) * len(seed) * 2))
+            print("Progress: " + str(progress) + " / " + str(len(num_novel_genomes) * len(seed) * 2))
