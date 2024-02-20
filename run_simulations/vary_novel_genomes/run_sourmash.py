@@ -35,7 +35,7 @@ def main():
 
     counter = 0
     for num_novel_genome in [0, 2, 4, 8, 16, 32]:
-        for i in range(50):
+        for i in range(20):
             seed = i + 1
             metagenome_filename = "metagenomes/metagenome_" + str(num_novel_genome) + "_seed_" + str(seed) + ".fastq"
             for ksize in [11, 15]:
