@@ -43,7 +43,7 @@ for num_novel in num_novel_genomes:
         except:
             print("Error encountered for size: " + str(num_novel) + " seed: " + str(s))
         progress += 1
-        print("Progress: " + str(progress) + " / " + str(len(num_novel) * len(seed)))
+        print("Progress: " + str(progress) + " / " + str(len(num_novel_genomes) * len(seed)))
 
 # invoke runs for sourmash, k=11,15
 print("Invoking runs for sourmash")
