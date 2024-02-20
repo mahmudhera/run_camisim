@@ -68,23 +68,27 @@ def main():
     # get the sorted order of these commons kos in the ground truth
     common_kos_sorted_indices = [sorted_kos_ground_truth.index(ko) for ko in common_kos]
     common_kos_sorted_indices_gt = list(common_kos_sorted_indices)
-    common_kos_sorted_gt = [sorted_kos_ground_truth[i] for i in common_kos_sorted_indices]
+    # sort common_kos_sorted_indices_gt from small to large
+    common_kos_sorted_indices_gt.sort()
+    common_kos_sorted_gt = [sorted_kos_ground_truth[i] for i in common_kos_sorted_indices_gt]
 
     # get the sorted order of these commons kos in the predictions
     common_kos_sorted_indices = [sorted_kos_predictions.index(ko) for ko in common_kos]
     common_kos_sorted_indices_pred = list(common_kos_sorted_indices)
-    common_kos_sorted_pred = [sorted_kos_predictions[i] for i in common_kos_sorted_indices]
+    # sort common_kos_sorted_indices_pred from small to large
+    common_kos_sorted_indices_pred.sort()
+    common_kos_sorted_pred = [sorted_kos_predictions[i] for i in common_kos_sorted_indices_pred]
 
 
     # debug
-    print(common_kos_sorted_gt[:10])
-    print(common_kos_sorted_pred[:10])
+    #print(common_kos_sorted_gt[:10])
+    #print(common_kos_sorted_pred[:10])
 
-    print(sorted_kos_ground_truth[:10])
-    print(sorted_kos_predictions[:10])
+    #print(sorted_kos_ground_truth[:10])
+    #print(sorted_kos_predictions[:10])
 
-    print(common_kos_sorted_indices_pred[:10])
-    print(common_kos_sorted_indices_gt[:10])
+    #print(common_kos_sorted_indices_pred[:10])
+    #print(common_kos_sorted_indices_gt[:10])
 
     # compute kendall tau using sorted_kos_ground_truth and most_abundant_kos_list
     tau, p_value = kendalltau(common_kos_sorted_gt, common_kos_sorted_pred)
