@@ -73,8 +73,12 @@ def main():
     common_kos_sorted_indices = [sorted_kos_predictions.index(ko) for ko in common_kos]
     common_kos_sorted_pred = [sorted_kos_predictions[i] for i in common_kos_sorted_indices]
 
+    # debug
     print(common_kos_sorted_gt[:10])
     print(common_kos_sorted_pred[:10])
+
+    print(sorted_kos_ground_truth[:10])
+    print(sorted_kos_predictions[:10])
 
     # compute kendall tau using sorted_kos_ground_truth and most_abundant_kos_list
     tau, p_value = kendalltau(common_kos_sorted_gt, common_kos_sorted_pred)
