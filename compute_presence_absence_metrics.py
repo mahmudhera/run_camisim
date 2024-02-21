@@ -37,6 +37,8 @@ def main():
     ground_truth_kos_list = ground_truth['ko_id'].tolist()
     ground_truth_abundances = ground_truth['abund_by_num_reads'].tolist()
 
+    gt_ko_to_abund = dict(zip(ground_truth_kos_list, ground_truth_abundances))
+
     # Sort the KO ground truth by abundance (highest to lowest)
     sorted_indices = np.argsort(ground_truth_abundances)[::-1]
     sorted_kos_ground_truth = [ground_truth_kos_list[i] for i in sorted_indices]
@@ -49,6 +51,8 @@ def main():
     if args.toolname == 'diamond':
         colname = 'relative_abundance_by_nucleotides_covered'
     relative_abundances = predictions[colname].tolist()
+
+    pred_ko_to_abund = dict(zip(predicted_kos, relative_abundances))
 
     # Sort the KO predictions by relative abundance (highest to lowest)
     sorted_indices = np.argsort(relative_abundances)[::-1]
@@ -94,8 +98,8 @@ def main():
     tau, p_value = kendalltau(common_kos_sorted_gt, common_kos_sorted_pred)
 
     # compute the pearson correlation of the ground truth and predictions for common kos
-    abund_of_common_kos_in_gt = [ground_truth_abundances[ground_truth_kos_list.index(ko)] for ko in common_kos_sorted_gt]
-    abund_of_common_kos_in_pred = [relative_abundances[sorted_kos_predictions.index(ko)] for ko in common_kos_sorted_pred]
+    abund_of_common_kos_in_gt = [gt_ko_to_abund[ko] for ko in common_kos_sorted_gt]
+    abund_of_common_kos_in_pred = [pred_ko_to_abund[ko] for ko in common_kos_sorted_pred]
     pearson_corr = np.corrcoef(abund_of_common_kos_in_gt, abund_of_common_kos_in_pred)[0, 1]
 
     # normalize the abundances of the common kos in the ground truth and predictions
@@ -132,11 +136,11 @@ def main():
     all_kos_abundances_pred = []
     for ko in all_kos_union:
         if ko in ground_truth_kos_set:
-            all_kos_abundances_gt.append(ground_truth_abundances[ground_truth_kos_list.index(ko)])
+            all_kos_abundances_gt.append(gt_ko_to_abund[ko])
         else:
             all_kos_abundances_gt.append(0)
         if ko in predicted_kos_set:
-            all_kos_abundances_pred.append(relative_abundances[sorted_kos_predictions.index(ko)])
+            all_kos_abundances_pred.append(pred_ko_to_abund[ko])
         else:
             all_kos_abundances_pred.append(0)
 
