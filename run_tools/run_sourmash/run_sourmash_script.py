@@ -31,7 +31,7 @@ if __name__=='__main__':
 
     subprocess.call( ['rm', metagenome_signature_name] )
     
-    cmd = 'sourmash sketch translate -p scaled=' + scaled + ',k=' + ksize + ' ' + metagenome_file + ' -o ' + metagenome_signature_file
+    cmd = 'sourmash sketch translate -p scaled=' + scaled + ',k=' + ksize + ',abund ' + metagenome_file + ' -o ' + metagenome_signature_file
     print(cmd)
     subprocess.call( cmd.split(' ') )
 
