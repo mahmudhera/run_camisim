@@ -35,7 +35,8 @@ def main():
     ground_truth = pd.read_csv(args.ground_truth, sep=',')
     ground_truth_kos_set = set(ground_truth['ko_id'])
     ground_truth_kos_list = ground_truth['ko_id'].tolist()
-    ground_truth_abundances = ground_truth['abund_by_num_reads'].tolist()
+    #ground_truth_abundances = ground_truth['abund_by_num_reads'].tolist()
+    ground_truth_abundances = ground_truth['abund_by_num_nts'].tolist()
 
     gt_ko_to_abund = dict(zip(ground_truth_kos_list, ground_truth_abundances))
 
