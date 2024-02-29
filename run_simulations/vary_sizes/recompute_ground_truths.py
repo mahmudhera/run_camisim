@@ -23,7 +23,7 @@ command = 'mkdir new_ground_truths'
 subprocess.run(command, shell=True)
 
 for variable in tqdm.tqdm(sizes, desc='Sizes'):
-    for seed in seeds:
+    for seed in tqdm.tqdm(seeds, desc='Seeds'):
         # locate the camisim output directory, format: outputs_of_camisim/out_<size>_seed_<seed>
         outdir = f'outputs_of_camisim/out_{variable}_seed_{seed}'
 
