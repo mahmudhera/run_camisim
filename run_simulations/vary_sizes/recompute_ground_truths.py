@@ -1,7 +1,6 @@
 # in this script, we will recompute the ground truths for the different sizes of the datasets
 
 import pandas as pd
-import os.path.exists as exists
 import subprocess
 import os
 import pysam
@@ -28,7 +27,7 @@ for variable in sizes:
         outdir = f'outputs_of_camisim/out_{variable}_seed_{seed}'
 
         # if outdir does not exist, skip
-        if not exists(outdir):
+        if not os.path.exists(outdir):
             continue
 
         # new ground truth file name, format: new_ground_truths/ko_ground_truth_<size>_seed_<seed>
