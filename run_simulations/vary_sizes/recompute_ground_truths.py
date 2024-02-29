@@ -22,6 +22,14 @@ seeds = range(1, 51)
 command = 'mkdir new_ground_truths'
 subprocess.run(command, shell=True)
 
+# read the gene to ko mapping file
+genes_to_kos_df = pd.read_csv(gene_to_ko_mapping_filename)
+gene_name_to_ko_id_dict = {}
+gene_name_list = genes_to_kos_df['gene_id'].tolist()
+ko_id_list = genes_to_kos_df['ko_id'].tolist()
+for gene_name, ko_id in zip(gene_name_list, ko_id_list):
+    gene_name_to_ko_id_dict[gene_name] = ko_id
+
 for variable in tqdm.tqdm(sizes, desc='Sizes'):
     for seed in tqdm.tqdm(seeds, desc='Seeds'):
         # locate the camisim output directory, format: outputs_of_camisim/out_<size>_seed_<seed>
@@ -122,14 +130,6 @@ for variable in tqdm.tqdm(sizes, desc='Sizes'):
         ###########################################################
         # use gene to ko mapping to get the ko level ground truth #
         ###########################################################
-                
-        # read the gene to ko mapping file
-        genes_to_kos_df = pd.read_csv(gene_to_ko_mapping_filename)
-        gene_name_to_ko_id_dict = {}
-        gene_name_list = genes_to_kos_df['gene_id'].tolist()
-        ko_id_list = genes_to_kos_df['ko_id'].tolist()
-        for gene_name, ko_id in zip(gene_name_list, ko_id_list):
-            gene_name_to_ko_id_dict[gene_name] = ko_id
 
         ko_abundances_by_num_reads = {}
         ko_abundances_by_num_nts_in_reads = {}
