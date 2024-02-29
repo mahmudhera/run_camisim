@@ -4,6 +4,7 @@ import pandas as pd
 import subprocess
 import os
 import pysam
+import tqdm
 
 kegg_genomes_directory = '/scratch/mbr5797/genomes_extracted_from_kegg'
 gene_to_ko_mapping_filename = '/scratch/mbr5797/genomes_extracted_from_kegg/present_genes_and_koids.csv'
@@ -21,7 +22,7 @@ seeds = range(1, 51)
 command = 'mkdir new_ground_truths'
 subprocess.run(command, shell=True)
 
-for variable in sizes:
+for variable in tqdm.tqdm(sizes, desc='Sizes'):
     for seed in seeds:
         # locate the camisim output directory, format: outputs_of_camisim/out_<size>_seed_<seed>
         outdir = f'outputs_of_camisim/out_{variable}_seed_{seed}'
