@@ -81,6 +81,8 @@ def main():
         assert os.path.exists(mapping_filename)
         assert os.path.exists(bam_filename)
     
+    gene_name_to_start_end_dict = {}
+
     # go into the kegg genomes directory and find the corresponding mapping files
     for used_genome_name in genome_names_used_in_simulation:
         # get the file names
@@ -98,6 +100,10 @@ def main():
         contig_id_list = mapping_df['contig_id'].tolist()
         start_position_list = mapping_df['start_position'].tolist()
         end_position_list = mapping_df['end_position'].tolist()
+
+        # map gene name to start and end positions
+        for gene_name, contig_id, start_position, end_position in zip(gene_name_list, contig_id_list, start_position_list, end_position_list):
+            gene_name_to_start_end_dict[gene_name] = (contig_id, start_position, end_position)
         
         for gene_name, contig_id, start_position, end_position in zip(gene_name_list, contig_id_list, start_position_list, end_position_list):
             # for each gene, query the bam file using these intervals and the contig id
@@ -166,6 +172,8 @@ def main():
     ko_abundances_by_mean_cov = {}
     ko_abundances_by_med_cov = {}
 
+    koid_to_divide_by = {}
+
     # iterate over the genes
     for gene_name in gene_name_to_num_reads_dict.keys():
         koid = gene_name_to_ko_id_dict[gene_name]
@@ -173,6 +181,11 @@ def main():
         num_nts_in_reads = gene_name_to_num_nucleotides_covered_dict[gene_name]
         mean_cov = gene_name_mean_coverage_dict[gene_name]
         med_cov = gene_name_to_median_coverage_dict[gene_name]
+
+        contig_id, start_position, end_position = gene_name_to_start_end_dict[gene_name]
+        gene_length = end_position - start_position + 1
+        if gene_length < 0:
+            gene_length = -gene_length
 
         # update the ko abundances
         if koid not in ko_abundances_by_num_reads:
@@ -185,11 +198,19 @@ def main():
 
         if koid not in ko_abundances_by_mean_cov:
             ko_abundances_by_mean_cov[koid] = 0
-        ko_abundances_by_mean_cov[koid] += mean_cov
+        ko_abundances_by_mean_cov[koid] += mean_cov * gene_length
+        
+        if koid not in koid_to_divide_by:
+            koid_to_divide_by[koid] = 0
+        koid_to_divide_by[koid] += gene_length
 
         if koid not in ko_abundances_by_med_cov:
             ko_abundances_by_med_cov[koid] = 0
         ko_abundances_by_med_cov[koid] += med_cov
+
+    # convert to abundance for mean cov
+    for koid in ko_abundances_by_mean_cov.keys():
+        ko_abundances_by_mean_cov[koid] /= (1.0*koid_to_divide_by[koid])
 
     # convert to relative abundance
     total_num_reads = sum(ko_abundances_by_num_reads.values())
