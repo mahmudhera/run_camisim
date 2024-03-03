@@ -78,8 +78,12 @@ for variable in tqdm.tqdm(sizes, desc='Sizes'):
             bam_filename = get_bam_filename(outdir, simulation_directory_name, used_genome_name)
             
             # check that the files exist
-            assert os.path.exists(mapping_filename)
-            assert os.path.exists(bam_filename)
+            try:
+                assert os.path.exists(mapping_filename)
+                assert os.path.exists(bam_filename)
+            except AssertionError:
+                print(f'Error: {mapping_filename} or {bam_filename} does not exist')
+                exit(-1)
         
         gene_name_to_start_end_dict = {}
         # go into the kegg genomes directory and find the corresponding mapping files
