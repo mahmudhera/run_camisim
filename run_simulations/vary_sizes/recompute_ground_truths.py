@@ -42,6 +42,10 @@ for variable in tqdm.tqdm(sizes, desc='Sizes'):
         # new ground truth file name, format: new_ground_truths/ko_ground_truth_<size>_seed_<seed>
         ko_ground_truth_filename = f'new_ground_truths/ko_ground_truth_{variable}_seed_{seed}'
 
+        # if this ground truth file already exists, skip
+        if os.path.exists(ko_ground_truth_filename):
+            continue
+
         # find the simulation directory name
         for directory in os.listdir(outdir):
             if 'sample' in directory:
