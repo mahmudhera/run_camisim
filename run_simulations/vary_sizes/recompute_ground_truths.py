@@ -82,8 +82,7 @@ for variable in tqdm.tqdm(sizes, desc='Sizes'):
                 assert os.path.exists(mapping_filename)
                 assert os.path.exists(bam_filename)
             except AssertionError:
-                print(f'Error: {mapping_filename} or {bam_filename} does not exist')
-                exit(-1)
+                continue
         
         gene_name_to_start_end_dict = {}
         # go into the kegg genomes directory and find the corresponding mapping files
