@@ -70,19 +70,6 @@ for variable in tqdm.tqdm(sizes, desc='Sizes'):
         gene_name_mean_coverage_dict = {}
         gene_name_to_median_coverage_dict = {}
         gene_name_to_num_nucleotides_covered_dict = {}
-
-        # go into the kegg genomes directory and ensure that mapping files exist for all the genomes used in the simulation
-        for used_genome_name in genome_names_used_in_simulation:
-            # get the file names
-            mapping_filename = get_kegg_genome_mapping_filename(used_genome_name)
-            bam_filename = get_bam_filename(outdir, simulation_directory_name, used_genome_name)
-            
-            # check that the files exist
-            try:
-                assert os.path.exists(mapping_filename)
-                assert os.path.exists(bam_filename)
-            except AssertionError:
-                continue
         
         gene_name_to_start_end_dict = {}
         # go into the kegg genomes directory and find the corresponding mapping files
@@ -90,6 +77,14 @@ for variable in tqdm.tqdm(sizes, desc='Sizes'):
             # get the file names
             mapping_filename = get_kegg_genome_mapping_filename(used_genome_name)
             bam_filename = get_bam_filename(outdir, simulation_directory_name, used_genome_name)
+
+            # if mapping file does not exist, skip
+            if not os.path.exists(mapping_filename):
+                continue
+
+            # if bam file does not exist, skip
+            if not os.path.exists(bam_filename):
+                continue
 
             # read the bam file using pysam
             bamfile = pysam.AlignmentFile(bam_filename, "rb")
