@@ -107,7 +107,8 @@ def postprocess(diamond_output, gene_output, ko_output):
             gene_id_to_num_reads[gene_id] = 0
             gene_id_to_num_nucleotides_covered[gene_id] = 0
         gene_id_to_num_reads[gene_id] += 1
-        gene_id_to_num_nucleotides_covered[gene_id] += num_matches - num_mismatches
+        #gene_id_to_num_nucleotides_covered[gene_id] += num_matches - num_mismatches
+        gene_id_to_num_nucleotides_covered[gene_id] += num_matches
 
     # conver number of reads and number of nucleotides covered to relative abundances
     total_reads = sum(gene_id_to_num_reads.values())
