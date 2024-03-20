@@ -167,7 +167,12 @@ def main():
     parser.add_argument("--outfmt", help="The output format to use.", type=int, default=6)
     parser.add_argument("--verbose", help="Print more information.", action="store_true")
     parser.add_argument("--sensitive", help="Use sensitive mode.", action="store_true")
+    parser.add_argument("--postprocess_only", help="Only postprocess the diamond output.", action="store_true")
     args = parser.parse_args()
+
+    if args.postprocess_only:
+        postprocess(args.diamondout, args.geneout, args.koout)
+        return
 
     # run diamond and store resource usages
     db = "/scratch/mbr5797/diamond_protein_ref_index/dmnd_ref_db.dmnd"
