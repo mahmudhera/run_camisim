@@ -32,7 +32,7 @@ def run_diamond(query, db, out, verbose, num_threads = 128, max_target_seqs = 1,
     """
     Run diamond with the given parameters. Capture time and memory usages. Return the resource usages.
     """
-    cmd = ["/usr/bin/time", "-v", "diamond", "blastx", "-q", query, "-d", db, "-o", out, "-p", str(num_threads), "-e", str(evalue), "-k", str(max_target_seqs), "-f", str(outfmt), "--algo", str(algo)]
+    cmd = ["/usr/bin/time", "-v", "diamond", "blastx", "-q", query, "-d", db, "-o", out, "-p", str(num_threads), "-e", str(evalue), "-f", str(outfmt), "--algo", str(algo)]
     if sensitive:
         cmd.append("--sensitive")
     if verbose:
