@@ -32,7 +32,11 @@ def run_diamond(query, db, out, verbose, num_threads = 128, max_target_seqs = 1,
     """
     Run diamond with the given parameters. Capture time and memory usages. Return the resource usages.
     """
-    cmd = ["/usr/bin/time", "-v", "diamond", "blastx", "-q", query, "-d", db, "-o", out, "-p", str(num_threads), "-e", str(evalue), "-f", str(outfmt), "--algo", str(algo)]
+    cmd = ["/usr/bin/time", "-v", "diamond", "blastx", "-q", query, "-d", db, "-o", out, "-p", str(num_threads), "-e", str(evalue), "--algo", str(algo)]
+    if outfmt == 6:
+        cmd.append("--outfmt")
+        cmd.append("6")
+        cmd = cmd + "qseqid qlen sseqid slen bitscore pident nident mismatch".split(" ")
     if sensitive:
         cmd.append("--sensitive")
     if verbose:
@@ -90,27 +94,47 @@ def postprocess(diamond_output, gene_output, ko_output):
     
     # open diamond output file, get the list of genes, their counts, and the number of nucleotides covered
     # diamond output file is tab separated, with the following columns:
-    # qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
+    # qseqid qlen sseqid slen bitscore pident nident mismatch
     # we only need sseqid
     # sseqid format: genome_id:gene_id|genome_id:gene_id|genome_id_sequence_id|sequence_id|gene_start|gene_end
     # we need to extract the gene id
     diamond_output = pd.read_csv(diamond_output, sep = "\t", header = None)
-    mapped_genes_list = diamond_output[1].tolist()
-    num_matches_list = diamond_output[3].tolist()
-    num_mismatches_list = diamond_output[4].tolist()
+    mapped_genes_list = diamond_output[2].tolist()
+    num_matches_list = diamond_output[6].tolist()
+    num_mismatches_list = diamond_output[7].tolist()
+    bitscore_list = diamond_output[4].tolist()
+    pident_list = diamond_output[5].tolist()
+    read_id_list = diamond_output[0].tolist()
+
+    # get the unique read ids
+    read_id_list = list(set(read_id_list))
 
     gene_id_to_num_reads = {}
     gene_id_to_num_nucleotides_covered = {}
-    for mapped_gene, num_matches, num_mismatches in zip(mapped_genes_list, num_matches_list, num_mismatches_list):
+
+    # for each read, filter the rows corresponding to that read, and get all info
+    for read_id in read_id_list:
+        read_rows = diamond_output[diamond_output[0] == read_id]
+        
+        # sort the rows by bitscore, and then pident
+        read_rows = read_rows.sort_values(by = [4, 5], ascending = [False, False])
+
+        # get the top row
+        top_row = read_rows.iloc[0]
+
+        # get the gene id, num_matches, num_mismatches
+        mapped_gene = top_row[2]
         gene_id = mapped_gene.split("|")[0]
+        num_matches = top_row[6]
+        
+        # update the gene id to num reads and num nucleotides covered
         if gene_id not in gene_id_to_num_reads.keys():
             gene_id_to_num_reads[gene_id] = 0
             gene_id_to_num_nucleotides_covered[gene_id] = 0
         gene_id_to_num_reads[gene_id] += 1
-        #gene_id_to_num_nucleotides_covered[gene_id] += num_matches - num_mismatches
         gene_id_to_num_nucleotides_covered[gene_id] += num_matches
 
-    # conver number of reads and number of nucleotides covered to relative abundances
+    # convert number of reads and number of nucleotides covered to relative abundances
     total_reads = sum(gene_id_to_num_reads.values())
     total_nucleotides_covered = sum(gene_id_to_num_nucleotides_covered.values())
     gene_id_to_relative_abundance_by_num_reads = {}
