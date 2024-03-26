@@ -89,7 +89,7 @@ def main():
     config.set('Main', 'max_processors', str(max_processors))
 
     # section: ReadSimulator
-    config.set('ReadSimulator', 'size', str(size))
+    config.set('ReadSimulator', 'size', "{:1.11f}".format(size))
     if type_name == 'wgsim':
         config.set('ReadSimulator', 'type', 'wgsim')
         config.set('ReadSimulator', 'profile', str(error_rate))

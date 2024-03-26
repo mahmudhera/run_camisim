@@ -6,6 +6,9 @@ gold standard.
 
 ### Steps
 1. Run simulation
+```
+python ../run_camisim.py 2 --config config_sample_1 --seed 0 --outdir sample_1 --size 0.00001 --gene_g_t gene_ground_truth_sample_1 --ko_g_t ko_ground_truth_sample_1 --metagenome_file metagenome_sample_1 --genome_cov_file coverages_sample_1 -t 128 -e 0 -v 0 -n wgsim
+```
 1. Run Diamond
 1. Test Diamond results
 1. Run sourmash
