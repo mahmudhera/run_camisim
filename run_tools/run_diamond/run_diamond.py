@@ -106,26 +106,33 @@ def postprocess(diamond_output, gene_output, ko_output):
 
     gene_id_to_num_reads = {}
     gene_id_to_num_nucleotides_covered = {}
+    
+    read_id_to_bitscore = {}
+    read_id_to_pident = {}
 
-    # for each read, filter the rows corresponding to that read, and get all info
-    for read_id in read_id_list:
-        read_rows = diamond_output[diamond_output[0] == read_id]
-        
-        # sort the rows by bitscore, and then pident
-        read_rows = read_rows.sort_values(by = [4, 5], ascending = [False, False])
+    # iterate over all rows in the dataframe
+    for _, row in diamond_output.iterrows():
+        # get the gene id
+        gene_id = row[2].split("|")[0]
+        num_matches = row[6]
+        bitscore = row[4]
+        pident = row[5]
+        read_id = row[0]
 
-        # get the top row
-        top_row = read_rows.iloc[0]
+        if read_id in read_id_to_bitscore.keys():
+            if bitscore <= read_id_to_bitscore[read_id]:
+                continue
+            if pident <= read_id_to_pident[read_id]:
+                continue
 
-        # get the gene id, num_matches, num_mismatches
-        mapped_gene = top_row[2]
-        gene_id = mapped_gene.split("|")[0]
-        num_matches = top_row[6]
-        
+        read_id_to_bitscore[read_id] = bitscore
+        read_id_to_pident[read_id] = pident
+
         # update the gene id to num reads and num nucleotides covered
         if gene_id not in gene_id_to_num_reads.keys():
             gene_id_to_num_reads[gene_id] = 0
             gene_id_to_num_nucleotides_covered[gene_id] = 0
+            
         gene_id_to_num_reads[gene_id] += 1
         gene_id_to_num_nucleotides_covered[gene_id] += num_matches
 
