@@ -7,7 +7,7 @@ def main():
 
     for error_rate in error_rates:
         # generate all metagenome filenames
-        metagenome_files = [ "metagenomes/metagenome_"+str(error_rate)+"_seed_"+str(seed)+".fastq" for seed in range(1, num_runs+1) ]
+        metagenome_files = [ "metagenomes/metagenome_"+str(error_rate)+"_seed_"+str(seed)+".fastq" for seed in range(2, num_runs+2) ]
         
         # run diamond batch for all these metagenems
         # command: python ../../run_tools/run_diamond/run_diamond_batch.py --threads 128 --diamond_script ../../run_tools/run_diamond/run_diamond.py --output_dir diamond_fast_batch_output <metagenomes>
