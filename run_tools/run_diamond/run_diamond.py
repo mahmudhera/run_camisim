@@ -32,7 +32,7 @@ def run_diamond(query, db, out, verbose, num_threads = 128, outfmt = 6, algo = 0
     """
     Run diamond with the given parameters. Capture time and memory usages. Return the resource usages.
     """
-    cmd = ["/usr/bin/time", "-v", "diamond", "blastx", "-q", query, "-d", db, "-o", out, "-p", str(num_threads), "-e", str(evalue), "--algo", str(algo), '--K', '1']
+    cmd = ["/usr/bin/time", "-v", "diamond", "blastx", "-q", query, "-d", db, "-o", out, "-p", str(num_threads), "-e", str(evalue), "--algo", str(algo), '-k', '1']
     if outfmt == 6:
         cmd.append("--outfmt")
         cmd.append("6")
@@ -99,11 +99,6 @@ def postprocess(diamond_output, gene_output, ko_output):
     # sseqid format: genome_id:gene_id|genome_id:gene_id|genome_id_sequence_id|sequence_id|gene_start|gene_end
     # we need to extract the gene id
     diamond_output = pd.read_csv(diamond_output, sep = "\t", header = None)
-    mapped_genes_list = diamond_output[2].tolist()
-    num_matches_list = diamond_output[6].tolist()
-    num_mismatches_list = diamond_output[7].tolist()
-    bitscore_list = diamond_output[4].tolist()
-    pident_list = diamond_output[5].tolist()
     read_id_list = diamond_output[0].tolist()
 
     # get the unique read ids
