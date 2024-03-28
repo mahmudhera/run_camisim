@@ -28,7 +28,7 @@ import argparse
 import pandas as pd
 import time
 
-def run_diamond(query, db, out, verbose, num_threads = 128, max_target_seqs = 1, outfmt = 6, algo = 0, evalue = 0.001, sensitive = False, resourceout = None):
+def run_diamond(query, db, out, verbose, num_threads = 128, outfmt = 6, algo = 0, evalue = 0.001, sensitive = False, resourceout = None):
     """
     Run diamond with the given parameters. Capture time and memory usages. Return the resource usages.
     """
@@ -188,7 +188,6 @@ def main():
     parser.add_argument("--algo", help="The algorithm to use. (0=double-indexed/1=query-indexed)", type=int, default=0)
     parser.add_argument("--threads", help="The number of threads to use.", type=int, default=128)
     parser.add_argument("--evalue", help="The evalue to use.", type=float, default=0.001)
-    parser.add_argument("--max_target_seqs", help="The maximum number of target sequences to report alignments for.", type=int, default=1)
     parser.add_argument("--outfmt", help="The output format to use.", type=int, default=6)
     parser.add_argument("--verbose", help="Print more information.", action="store_true")
     parser.add_argument("--sensitive", help="Use sensitive mode.", action="store_true")
@@ -201,7 +200,7 @@ def main():
 
     # run diamond and store resource usages
     db = "/scratch/mbr5797/diamond_protein_ref_index/dmnd_ref_db.dmnd"
-    run_diamond(args.query, db, args.diamondout, args.verbose, args.threads, args.max_target_seqs, args.outfmt, evalue = args.evalue, sensitive=args.sensitive, resourceout = args.resourceout)
+    run_diamond(args.query, db, args.diamondout, args.verbose, args.threads, args.outfmt, evalue = args.evalue, sensitive=args.sensitive, resourceout = args.resourceout)
     
     # postprocess the diamond output for gene and ko relative abundances
     postprocess(args.diamondout, args.geneout, args.koout)
