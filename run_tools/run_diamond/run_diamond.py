@@ -32,7 +32,7 @@ def run_diamond(query, db, out, verbose, num_threads = 128, outfmt = 6, algo = 0
     """
     Run diamond with the given parameters. Capture time and memory usages. Return the resource usages.
     """
-    cmd = ["/usr/bin/time", "-v", "diamond", "blastx", "-q", query, "-d", db, "-o", out, "-p", str(num_threads), "-e", str(evalue), "--algo", str(algo)]
+    cmd = ["/usr/bin/time", "-v", "diamond", "blastx", "-q", query, "-d", db, "-o", out, "-p", str(num_threads), "-e", str(evalue), "--algo", str(algo), '-K', '1']
     if outfmt == 6:
         cmd.append("--outfmt")
         cmd.append("6")
