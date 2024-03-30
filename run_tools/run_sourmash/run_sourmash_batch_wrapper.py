@@ -1,6 +1,15 @@
 import argparse
-import time
 import subprocess
+import multiprocessing
+
+def execute_command(cmd, is_verbose):
+    if is_verbose:
+        print(cmd)
+
+    p = subprocess.Popen(cmd, shell=True)
+    p.wait()
+
+    return p.returncode
 
 def parse_args():
     parser = argparse.ArgumentParser(description="This script will take a metagenome-list (num of arguments is variable) as input. Then, it will invoke sourmash prefetch for every metagenome in the list, generate list of matched KOs, and record them in individual files. Time and memory for every run will also be recorded separately.",
@@ -46,17 +55,19 @@ if __name__ == '__main__':
         resource_usage_filename = outdir + '/' + metagenome_name + '_resource_usage'
 
         cmd = '/usr/bin/time -v python ' + sourmash_running_script + ' --ksize ' + ksize + ' --threshold ' + threshold_bp + ' --metagenome ' + metagenome_file + ' --kosig ' + ko_signature_filename + ' --scaled ' + scaled
-        cmd += ' --gatherfile ' + gather_output_filename + ' --outfile ' + ko_abundance_filename + ' --metagenome_sketch_name ' + metagenome_signature_name + ' --resource ' + resource_usage_filename + '&'
+        cmd += ' --gatherfile ' + gather_output_filename + ' --outfile ' + ko_abundance_filename + ' --metagenome_sketch_name ' + metagenome_signature_name + ' --resource ' + resource_usage_filename
 
         if is_verbose:
             print(cmd)
 
-        # invoke the command, store the process
-        p = subprocess.Popen(cmd, shell=True)
+        # open a thread for this command
+        p = multiprocessing.Process(target=execute_command, args=(cmd, is_verbose))
+        p.start()
         processes_opened.append(p)
         commands_executed.append(cmd)
 
-    exit_codes = [p.wait() for p in processes_opened]
+    # wait for all processes to finish
+    exit_codes = [p.join() for p in processes_opened]
     for exit_code, command in zip(exit_codes, commands_executed):
         if exit_code != 0:
             print("Error in running the sourmash script for the command: \n" + command)
