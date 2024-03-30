@@ -49,6 +49,8 @@ def main():
 
         end_time = time.time()
 
+        print (output)
+
         # user time is at line 23 from the bottom   
         # system time is at line 22 from the bottom
         # maximum resident set size is at line 15 from the bottom
