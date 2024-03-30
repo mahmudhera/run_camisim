@@ -67,7 +67,10 @@ if __name__ == '__main__':
         commands_executed.append(cmd)
 
     # wait for all processes to finish
-    exit_codes = [p.join() for p in processes_opened]
+    for p in processes_opened:
+        p.join()
+
+    exit_codes = [p.exitcode for p in processes_opened]
     for exit_code, command in zip(exit_codes, commands_executed):
         if exit_code != 0:
             print("Error in running the sourmash script for the command: \n" + command)
