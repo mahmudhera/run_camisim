@@ -41,9 +41,9 @@ if __name__=='__main__':
     subprocess.call( cmd.split(' ') )
 
     df = pd.read_csv(gather_output_filename, delimiter=',')
-    df_new = df[ ['name', 'f_match_query'] ]
+    df_new = df[ ['match_name', 'f_match_query'] ]
     sum_weights = df_new['f_match_query'].sum(axis=0)
     df_tmp = df_new['f_match_query'].divide(sum_weights)
-    df_out = pd.concat([df['name'], df_tmp], axis=1)
+    df_out = pd.concat([df['match_name'], df_tmp], axis=1)
     df_out.columns = ['ko_id', 'abundance']
     df_out.to_csv(ko_abundance_filename)

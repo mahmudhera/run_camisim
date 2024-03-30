@@ -55,7 +55,7 @@ if __name__ == '__main__':
         resource_usage_filename = outdir + '/' + metagenome_name + '_resource_usage'
 
         cmd = '/usr/bin/time -v python ' + sourmash_running_script + ' --ksize ' + ksize + ' --threshold ' + threshold_bp + ' --metagenome ' + metagenome_file + ' --kosig ' + ko_signature_filename + ' --scaled ' + scaled
-        cmd += ' --gatherfile ' + gather_output_filename + ' --outfile ' + ko_abundance_filename + ' --metagenome_sketch_name ' + metagenome_signature_name + ' --resource ' + resource_usage_filename
+        cmd += ' --gatherfile ' + gather_output_filename + ' --outfile ' + ko_abundance_filename + ' --metagenome_sketch_name ' + metagenome_signature_file + ' --resource ' + resource_usage_filename
 
         if is_verbose:
             print(cmd)
