@@ -16,6 +16,7 @@ def main():
         start_time = time.time()
 
         cmd = "/usr/bin/time -v python ../../run_tools/run_sourmash/run_sourmash_batch_wrapper.py --ksize 11 --threshold 50 --kosig /scratch/mbr5797/KOs_sketched/KOs_sbt_scaled_1000_k_11.sbt.zip --scaled 1000 --outdir sourmash_batch_output " + " ".join(metagenome_files)
+        print(cmd)
         output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
         output = output.decode("utf-8")
         output = output.split('\n')
@@ -42,6 +43,7 @@ def main():
         start_time = time.time()
 
         cmd = "/usr/bin/time -v python ../../run_tools/run_sourmash/run_sourmash_batch_wrapper.py --ksize 15 --threshold 50 --kosig /scratch/mbr5797/KOs_sketched/KOs_sbt_scaled_1000_k_15.sbt.zip --scaled 1000 --outdir sourmash_batch_output " + " ".join(metagenome_files)
+        print(cmd)
         output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
         output = output.decode("utf-8")
 
