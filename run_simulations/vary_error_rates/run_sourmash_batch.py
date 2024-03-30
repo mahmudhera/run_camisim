@@ -10,12 +10,12 @@ def main():
         metagenome_files = [ "metagenomes/metagenome_"+str(error_rate)+"_seed_"+str(seed)+".fastq" for seed in range(2, num_runs+2) ]
         
         # run sourmash batch for all these metagenems, using k = 11 and 15
-        # command: python ../../run_tools/run_diamond/run_sourmash_batch_wrapper.py --ksize <k> --threshold 50 --kosig /scratch/mbr5797/KOs_sketched/KOs_sbt_scaled_1000_k_<ksize>.sbt.zip --scaled 1000 --outdir sourmash_batch_output --verbose <metagenomes>
+        # command: python ../../run_tools/run_sourmash/run_sourmash_batch_wrapper.py --ksize <k> --threshold 50 --kosig /scratch/mbr5797/KOs_sketched/KOs_sbt_scaled_1000_k_<ksize>.sbt.zip --scaled 1000 --outdir sourmash_batch_output --verbose <metagenomes>
         # also, record time and memory
 
         start_time = time.time()
 
-        cmd = "/usr/bin/time -v python ../../run_tools/run_diamond/run_sourmash_batch_wrapper.py --ksize 11 --threshold 50 --kosig /scratch/mbr5797/KOs_sketched/KOs_sbt_scaled_1000_k_11.sbt.zip --scaled 1000 --outdir sourmash_batch_output " + " ".join(metagenome_files)
+        cmd = "/usr/bin/time -v python ../../run_tools/run_sourmash/run_sourmash_batch_wrapper.py --ksize 11 --threshold 50 --kosig /scratch/mbr5797/KOs_sketched/KOs_sbt_scaled_1000_k_11.sbt.zip --scaled 1000 --outdir sourmash_batch_output " + " ".join(metagenome_files)
         output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
         output = output.decode("utf-8")
         output = output.split('\n')
@@ -41,7 +41,7 @@ def main():
 
         start_time = time.time()
 
-        cmd = "/usr/bin/time -v python ../../run_tools/run_diamond/run_sourmash_batch_wrapper.py --ksize 15 --threshold 50 --kosig /scratch/mbr5797/KOs_sketched/KOs_sbt_scaled_1000_k_15.sbt.zip --scaled 1000 --outdir sourmash_batch_output " + " ".join(metagenome_files)
+        cmd = "/usr/bin/time -v python ../../run_tools/run_sourmash/run_sourmash_batch_wrapper.py --ksize 15 --threshold 50 --kosig /scratch/mbr5797/KOs_sketched/KOs_sbt_scaled_1000_k_15.sbt.zip --scaled 1000 --outdir sourmash_batch_output " + " ".join(metagenome_files)
         output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
         output = output.decode("utf-8")
 
