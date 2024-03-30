@@ -35,14 +35,15 @@ if __name__=='__main__':
     print(cmd)
     subprocess.call( cmd.split(' ') )
 
-    cmd = 'sourmash gather --protein -k ' + ksize + ' --threshold-bp ' + threshold_bp + ' ' + metagenome_signature_file + ' ' + ko_signature_filename + ' -o ' + gather_output_filename
+    #cmd = 'sourmash gather --protein -k ' + ksize + ' --threshold-bp ' + threshold_bp + ' ' + metagenome_signature_file + ' ' + ko_signature_filename + ' -o ' + gather_output_filename
+    cmd = 'sourmash prefetch ' + metagenome_signature_file + ' ' + ko_signature_filename + ' -o ' + gather_output_filename + ' --threshold-bp ' + threshold_bp + ' --protein' + ' --ksize ' + ksize + ' --scaled ' + scaled
     print(cmd)
     subprocess.call( cmd.split(' ') )
 
     df = pd.read_csv(gather_output_filename, delimiter=',')
-    df_new = df[ ['name', 'f_unique_weighted'] ]
-    sum_weights = df_new['f_unique_weighted'].sum(axis=0)
-    df_tmp = df_new['f_unique_weighted'].divide(sum_weights)
+    df_new = df[ ['name', 'f_match_query'] ]
+    sum_weights = df_new['f_match_query'].sum(axis=0)
+    df_tmp = df_new['f_match_query'].divide(sum_weights)
     df_out = pd.concat([df['name'], df_tmp], axis=1)
     df_out.columns = ['ko_id', 'abundance']
     df_out.to_csv(ko_abundance_filename)
