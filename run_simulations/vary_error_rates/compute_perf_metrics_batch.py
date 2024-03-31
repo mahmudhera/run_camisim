@@ -12,7 +12,7 @@ progress = 0
 for error_rate in error_rates:
     for s in seed:
         ground_truth_ko_file = "ko_ground_truths/ko_ground_truth_" + str(error_rate) + "_seed_" + str(s)
-        predicted_ko_file = "diamond_fast_batch_output/diamond_ko_results_" + str(error_rate) + "_seed_" + str(s)
+        predicted_ko_file = "diamond_fast_batch_output/diamond_ko_results_" + str(error_rate) + "_seed_" + str(s) + '.fastq'
         output_file = "diamond_fast_batch_output/diamond_performance_metrics_" + str(error_rate) + "_seed_" + str(s)
         try:
             os.system("python ../../compute_presence_absence_metrics.py " + ground_truth_ko_file + " " + predicted_ko_file + " " + output_file + " --toolname diamond")
