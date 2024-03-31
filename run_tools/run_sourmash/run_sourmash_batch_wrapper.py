@@ -48,11 +48,11 @@ if __name__ == '__main__':
         # create the gather filename, output filename, metagenome sketch name, and resource usage filename
         # all these files will be created in the outdir
         metagenome_name = metagenome_file.split('/')[-1]
-        gather_output_filename = outdir + '/gather_' + metagenome_name
-        ko_abundance_filename = outdir + '/ko_abundances_' + metagenome_name
-        metagenome_signature_name = metagenome_name + '_sketch'
+        gather_output_filename = outdir + '/gather_' + metagenome_name + '_k_' + str(ksize)
+        ko_abundance_filename = outdir + '/ko_abundances_' + metagenome_name + '_k_' + str(ksize)
+        metagenome_signature_name = metagenome_name + '_sketch' + + '_k_' + str(ksize)
         metagenome_signature_file = outdir + '/' + metagenome_signature_name
-        resource_usage_filename = outdir + '/' + metagenome_name + '_resource_usage'
+        resource_usage_filename = outdir + '/' + metagenome_name + '_resource_usage' + '_k_' + str(ksize)
 
         cmd = '/usr/bin/time -v python ' + sourmash_running_script + ' --ksize ' + ksize + ' --threshold ' + threshold_bp + ' --metagenome ' + metagenome_file + ' --kosig ' + ko_signature_filename + ' --scaled ' + scaled
         cmd += ' --gatherfile ' + gather_output_filename + ' --outfile ' + ko_abundance_filename + ' --metagenome_sketch_name ' + metagenome_signature_file + ' --resource ' + resource_usage_filename
