@@ -50,7 +50,7 @@ if __name__ == '__main__':
         metagenome_name = metagenome_file.split('/')[-1]
         gather_output_filename = outdir + '/gather_' + metagenome_name + '_k_' + str(ksize)
         ko_abundance_filename = outdir + '/ko_abundances_' + metagenome_name + '_k_' + str(ksize)
-        metagenome_signature_name = metagenome_name + '_sketch' + + '_k_' + str(ksize)
+        metagenome_signature_name = metagenome_name + '_sketch' + '_k_' + str(ksize)
         metagenome_signature_file = outdir + '/' + metagenome_signature_name
         resource_usage_filename = outdir + '/' + metagenome_name + '_resource_usage' + '_k_' + str(ksize)
 
