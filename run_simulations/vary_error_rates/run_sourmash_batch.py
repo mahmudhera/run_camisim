@@ -22,19 +22,21 @@ def main():
         output = output.split('\n')
 
         end_time = time.time()
-
-        # user time is at line 23 from the bottom
-        # system time is at line 22 from the bottom
-        # maximum resident set size is at line 15 from the bottom
-        # average resident set size is at line 14 from the bottom
-        # cpu time is the sum of user time and system time
         
-        user_time = float(output[-23].split(" ")[-1].strip())
-        system_time = float(output[-22].split(" ")[-1].strip())
-        cpu_time = user_time + system_time
-        max_resident_set_size = float(output[-15].split(" ")[-1].strip())
-        avg_resident_set_size = float(output[-14].split(" ")[-1].strip())
+        user_time, system_time, max_resident_set_size, avg_resident_set_size = 0, 0, 0, 0
+        # iterate the lines in reverse order
+        for line in output[::-1]:
+            if 'User time' in line:
+                user_time = float(line.split(" ")[-1].strip())
+                break
+            if 'System time' in line:
+                system_time = float(line.split(" ")[-1].strip())
+            if 'Maximum resident set size' in line:
+                max_resident_set_size = float(line.split(" ")[-1].strip())
+            if 'Average resident set size' in line:
+                avg_resident_set_size = float(line.split(" ")[-1].strip())
         walltime = end_time - start_time
+        cpu_time = user_time + system_time
 
         # write to file: single row: walltime,cputime,maxresident,avgresident
         with open("sourmash_batch_output/sourmash_resource_usage_" + str(error_rate) + "_ksize_11.txt", "w") as f:
@@ -51,18 +53,20 @@ def main():
 
         print (output)
 
-        # user time is at line 23 from the bottom   
-        # system time is at line 22 from the bottom
-        # maximum resident set size is at line 15 from the bottom
-        # average resident set size is at line 14 from the bottom
-        # cpu time is the sum of user time and system time
-
-        user_time = float(output[-23].split(" ")[-1].strip())
-        system_time = float(output[-22].split(" ")[-1].strip())
-        cpu_time = user_time + system_time
-        max_resident_set_size = float(output[-15].split(" ")[-1].strip())
-        avg_resident_set_size = float(output[-14].split(" ")[-1].strip())
+        user_time, system_time, max_resident_set_size, avg_resident_set_size = 0, 0, 0, 0
+        # iterate the lines in reverse order
+        for line in output[::-1]:
+            if 'User time' in line:
+                user_time = float(line.split(" ")[-1].strip())
+                break
+            if 'System time' in line:
+                system_time = float(line.split(" ")[-1].strip())
+            if 'Maximum resident set size' in line:
+                max_resident_set_size = float(line.split(" ")[-1].strip())
+            if 'Average resident set size' in line:
+                avg_resident_set_size = float(line.split(" ")[-1].strip())
         walltime = end_time - start_time
+        cpu_time = user_time + system_time
 
         # write to file: single row: walltime,cputime,maxresident,avgresident
         with open("sourmash_batch_output/sourmash_resource_usage_" + str(error_rate) + "_ksize_15.txt", "w") as f:
