@@ -40,7 +40,7 @@ error_rates = [0.00, 0.01, 0.02, 0.03, 0.04, 0.05]
 seed = list(range(2, 32))
 
 # create a dataframe to store the performance metrics
-performance_metrics = pd.DataFrame(columns=['purity', 'completeness', 'kendalltau', 'pearsonr_common', 'pearsonr_all', 'wt_purity', 'wt_completeness', 'kl_div_common_gt_to_pred', 'kl_div_common_pred_to_gt', 'bray_curtis', 'size', 'tool'])
+performance_metrics = pd.DataFrame(columns=['purity', 'completeness', 'weighted_jaccard', 'kendalltau', 'pearsonr_common', 'pearsonr_all', 'wt_purity', 'wt_completeness', 'kl_div_common_gt_to_pred', 'kl_div_common_pred_to_gt', 'bray_curtis', 'size', 'tool'])
 
 # read the performance metrics for diamond fast
 for error_rate in error_rates:
