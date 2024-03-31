@@ -154,13 +154,33 @@ def main():
     weighted_completeness = percent_of_gt_in_pred
     weighted_purity = percent_of_pred_in_gt
 
+    # compute weighted jaccard index
+    kos_all = ground_truth_kos_set.union(predicted_kos_set)
+    
+    value1, value2 = 0.0, 0.0
+    for ko in kos_all:
+        try:
+            v1 = gt_ko_to_abund[ko]
+        except:
+            v1 = 0
+
+        try:
+            v2 = pred_ko_to_abund[ko]
+        except:
+            v2 = 0
+
+        value1 += min(v1, v2)
+        value2 += max(v1, v2)
+
+    weighted_jaccard = value1 / value2
+
     # write headers to output file
     with open(args.output, 'w') as f:
-        f.write('purity,completeness,kendalltau,pearsonr_common,pearsonr_all,wt_purity,wt_completeness,kl_div_common_gt_to_pred,kl_div_common_pred_to_gt,bray_curtis\n')
+        f.write('purity,completeness,kendalltau,pearsonr_common,pearsonr_all,wt_purity,wt_completeness,kl_div_common_gt_to_pred,kl_div_common_pred_to_gt,bray_curtis,weighted_jaccard\n')
 
     # Write precision, recall, and tau to output file
     with open(args.output, 'a') as f:
-        f.write(f'{purity},{completeness},{tau},{pearson_corr},{pearson_corr_all},{weighted_purity},{weighted_completeness},{kl_div_common_gt_to_pred},{kl_div_common_pred_to_gt},{bray_curtis_common}\n')
+        f.write(f'{purity},{completeness},{tau},{pearson_corr},{pearson_corr_all},{weighted_purity},{weighted_completeness},{kl_div_common_gt_to_pred},{kl_div_common_pred_to_gt},{bray_curtis_common},{weighted_jaccard}\n')
 
 if __name__ == '__main__':
     main()
