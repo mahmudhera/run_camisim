@@ -2,7 +2,9 @@ import subprocess
 import time
 
 def main():
-    sizes = [0.4, 0.8, 1.6, 3.2, 6.4]
+    #sizes = [0.4, 0.8, 1.6, 3.2, 6.4]
+    # only need to run for 3.2 and 6.4, already ran for 0.4, 0.8, 1.6
+    sizes = [3.2, 6.4]
     num_runs = 30
 
     for size in sizes:
@@ -16,11 +18,14 @@ def main():
         start_time = time.time()
 
         cmd = "/usr/bin/time -v python ../../run_tools/run_diamond/run_diamond_batch.py --threads 128 --diamond_script ../../run_tools/run_diamond/run_diamond.py --output_dir diamond_fast_batch_output " + " ".join(metagenome_files)
+        print(cmd)
         output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
         output = output.decode("utf-8")
         output = output.split('\n')
 
         end_time = time.time()
+
+        print(output)
 
         # user time is at line 23 from the bottom
         # system time is at line 22 from the bottom
