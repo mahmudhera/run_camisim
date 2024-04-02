@@ -52,7 +52,7 @@ for i, metric in enumerate(metrics, 1):
         plt.errorbar(subset['size'], subset[f'{metric}_mean'], yerr=subset[f'{metric}_std'], 
                      fmt='none', capsize=5, label='_nolegend_', color=lines[j].get_color())
 
-    plt.xlabel('Error rate')
+    plt.xlabel('Error rate (%)')
     plt.ylabel(metric_title)
     plt.title(f'Mean {metric_title} with Error Bars')
     plt.xticks(subset['size'].unique(), labels=subset['size'].unique())

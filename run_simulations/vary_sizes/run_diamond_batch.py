@@ -19,6 +19,7 @@ def main():
 
         cmd = "/usr/bin/time -v python ../../run_tools/run_diamond/run_diamond_batch.py --threads 128 --diamond_script ../../run_tools/run_diamond/run_diamond.py --output_dir diamond_fast_batch_output " + " ".join(metagenome_files)
         print(cmd)
+        subprocess.call(cmd, shell=True)
         output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
         output = output.decode("utf-8")
         output = output.split('\n')
