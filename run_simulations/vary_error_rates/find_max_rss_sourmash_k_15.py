@@ -13,6 +13,7 @@ for error_rate in error_rates:
             lines = f.readlines()
             for line in lines:
                 walltime, cputime, max_rss_str, avg_rss = line.strip().split(',')
+                print(max_rss_str)
                 if float(max_rss_str) > max_rss:
                     max_rss = float(max_rss)
     print(f'Error rate: {error_rate}, max RSS: {max_rss}')
