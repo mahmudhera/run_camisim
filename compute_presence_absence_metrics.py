@@ -174,13 +174,24 @@ def main():
 
     weighted_jaccard = value1 / value2
 
+    # compute completeness by limiting ground truth to top 95% abundant KOs
+    top_95_kos = set()
+    top_abundance_seen = 0.0
+    for ko in sorted_kos_ground_truth:
+        top_95_kos.add(ko)
+        top_abundance_seen += gt_ko_to_abund[ko]
+        if top_abundance_seen >= 0.95:
+            break
+
+    completeness_top_95 = len(top_95_kos.intersection(predicted_kos_set)) / len(top_95_kos)
+
     # write headers to output file
     with open(args.output, 'w') as f:
-        f.write('purity,completeness,kendalltau,pearsonr_common,pearsonr_all,wt_purity,wt_completeness,kl_div_common_gt_to_pred,kl_div_common_pred_to_gt,bray_curtis,weighted_jaccard\n')
+        f.write('purity,completeness,kendalltau,pearsonr_common,pearsonr_all,wt_purity,wt_completeness,kl_div_common_gt_to_pred,kl_div_common_pred_to_gt,bray_curtis,weighted_jaccard,completeness_top_95\n')
 
     # Write precision, recall, and tau to output file
     with open(args.output, 'a') as f:
-        f.write(f'{purity},{completeness},{tau},{pearson_corr},{pearson_corr_all},{weighted_purity},{weighted_completeness},{kl_div_common_gt_to_pred},{kl_div_common_pred_to_gt},{bray_curtis_common},{weighted_jaccard}\n')
+        f.write(f'{purity},{completeness},{tau},{pearson_corr},{pearson_corr_all},{weighted_purity},{weighted_completeness},{kl_div_common_gt_to_pred},{kl_div_common_pred_to_gt},{bray_curtis_common},{weighted_jaccard},{completeness_top_95}\n')
 
 if __name__ == '__main__':
     main()
