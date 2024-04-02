@@ -6,14 +6,14 @@ seeds = range(2, 32)
 
 # for every error rate, find the maximum RSS value
 for error_rate in error_rates:
-    max_rss = 0
+    max_rss = 0.0
     for seed in seeds:
         filename = f'sourmash_batch_output/metagenome_{error_rate}_seed_{seed}.fastq_resource_usage_k_15'
         with open(filename, 'r') as f:
             lines = f.readlines()
             for line in lines:
                 walltime, cputime, max_rss_str, avg_rss = line.strip().split(',')
-                print(max_rss_str)
+                print(max_rss_str, float(max_rss_str))
                 if float(max_rss_str) > max_rss:
                     max_rss = float(max_rss)
     print(f'Error rate: {error_rate}, max RSS: {max_rss}')
