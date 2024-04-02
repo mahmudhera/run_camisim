@@ -62,9 +62,17 @@ if __name__ == '__main__':
             command.append("--postprocess_only")
 
         # run the command
-        res = subprocess.run(command) 
+        try:
+            res = subprocess.run(command) 
+        except subprocess.CalledProcessError as e:
+            logging.error("Failed to run diamond on file: " + file)
+            logging.error("Command: " + " ".join(command))
+            output = e.output.decode("utf-8").split('\n')
+            logging.error("Error: " + output)
+            continue
 
         # check that the process completed successfully
         if res.returncode != 0:
             logging.error("Failed to run diamond on file: " + file)
-            sys.exit(-1)
+            logging.error("Command: " + " ".join(command))
+            logging.error("Output:\n" + res.stdout)
