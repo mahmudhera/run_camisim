@@ -13,17 +13,25 @@ std_performance_file = './std_performance_metrics_batch.csv'
 mean_performance_data = pd.read_csv(mean_performance_file)
 std_performance_data = pd.read_csv(std_performance_file)
 
+# replace sourmash by funprofiler everywhere in the data
+mean_performance_data['tool'] = mean_performance_data['tool'].replace('sourmash,k=11', 'funprofiler,k=11')
+mean_performance_data['tool'] = mean_performance_data['tool'].replace('sourmash,k=15', 'funprofiler,k=15')
+std_performance_data['tool'] = std_performance_data['tool'].replace('sourmash,k=11', 'funprofiler,k=11')
+std_performance_data['tool'] = std_performance_data['tool'].replace('sourmash,k=15', 'funprofiler,k=15')
+mean_performance_data['tool'] = mean_performance_data['tool'].replace('diamond_fast', 'DIAMOND(fast)')
+std_performance_data['tool'] = std_performance_data['tool'].replace('diamond_fast', 'DIAMOND(fast)')
+
 # Merging the mean and standard deviation data
 merged_data = pd.merge(mean_performance_data, std_performance_data, on=['size', 'tool'], suffixes=('_mean', '_std'))
 
 # List of metrics to plot
 metrics = ['purity', 'completeness', 'wt_purity', 'wt_completeness', 'pearsonr_common', 'pearsonr_all', 
             'kl_div_common_gt_to_pred', 
-           'kl_div_common_pred_to_gt', 'kendalltau', 'bray_curtis']
+           'kl_div_common_pred_to_gt', 'weighted_jaccard', 'bray_curtis']
 
 metric_titles = ['Purity', 'Completeness', 'Weighted Purity', 'Weighted Completeness', 'Pearson Correlation (Common KOs)',
                  'Pearson Correlation (All KOs)', 'KL Divergence (Ground Truth to Predictions)', 
-                 'KL Divergence (Predictions to Ground Truth)', 'Kendall Tau', 'Bray-Curtis Distance']
+                 'KL Divergence (Predictions to Ground Truth)', 'Jaccard', 'Bray-Curtis Distance']
 
 # Number of unique tools in the dataset
 num_tools = merged_data['tool'].nunique()
