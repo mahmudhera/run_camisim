@@ -3,8 +3,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load the CSV files
-mean_performance_file = './mean_performance_metrics.csv'
-std_performance_file = './std_performance_metrics.csv'
+#mean_performance_file = './mean_performance_metrics.csv'
+#std_performance_file = './std_performance_metrics.csv'
+
+mean_performance_file = './mean_performance_metrics_batch.csv'
+std_performance_file = './std_performance_metrics_batch.csv'
 
 # Reading the CSV files
 mean_performance_data = pd.read_csv(mean_performance_file)
@@ -59,4 +62,4 @@ for i, metric in enumerate(metrics, 1):
     plt.legend(title='Tool')
 
 plt.tight_layout()
-plt.savefig('perf_metrics.pdf')
+plt.savefig('perf_metrics_batch.pdf')
