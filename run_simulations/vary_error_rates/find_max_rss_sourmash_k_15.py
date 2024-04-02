@@ -14,6 +14,6 @@ for error_rate in error_rates:
         f.close()
         line = lines[0]
         walltime, cputime, max_rss_str, avg_rss = line.strip().split(',')
-        max_rss = float(max_rss)
+        max_rss = float(max_rss_str)
         max_rss_list.append(max_rss)
     print(f'Error rate: {error_rate}, max RSS: {max(max_rss_list)}')
