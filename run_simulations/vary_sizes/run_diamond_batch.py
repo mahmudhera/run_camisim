@@ -2,7 +2,7 @@ import subprocess
 import time
 
 def main():
-    sizes = [0.4, 0.8, 1.6, 3.2, 6.4, 12.8]
+    sizes = [3.2, 6.4, 12.8]
     # only need to run for 3.2 and 6.4, already ran for 0.4, 0.8, 1.6
     #sizes = [3.2, 6.4, 12.8]
     num_runs = 30
