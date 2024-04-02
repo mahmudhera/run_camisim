@@ -31,7 +31,7 @@ metrics = ['purity', 'completeness', 'wt_purity', 'wt_completeness', 'pearsonr_c
 
 metric_titles = ['Purity', 'Completeness', 'Weighted Purity', 'Weighted Completeness', 'Pearson Correlation (Common KOs)',
                  'Pearson Correlation (All KOs)', 'KL Divergence (Ground Truth to Predictions)', 
-                 'KL Divergence (Predictions to Ground Truth)', 'Jaccard', 'Bray-Curtis Distance']
+                 'KL Divergence (Predictions to Ground Truth)', 'Jaccard Similarity', 'Bray-Curtis Distance']
 
 # Number of unique tools in the dataset
 num_tools = merged_data['tool'].nunique()
@@ -63,9 +63,9 @@ for i, metric in enumerate(metrics, 1):
         plt.errorbar(subset['size'], subset[f'{metric}_mean'], yerr=subset[f'{metric}_std'], 
                      fmt='none', capsize=5, label='_nolegend_', color=lines[j].get_color())
 
-    plt.xlabel('Error rate (%)')
+    plt.xlabel('Error rate (proportion)')
     plt.ylabel(metric_title)
-    plt.title(f'Mean {metric_title} with Error Bars')
+    plt.title(f'Average {metric_title}')
     plt.xticks(subset['size'].unique(), labels=subset['size'].unique())
     plt.legend(title='Tool')
 
