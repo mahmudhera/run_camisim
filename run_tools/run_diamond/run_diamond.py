@@ -46,6 +46,7 @@ def run_diamond(query, db, out, verbose, num_threads = 128, outfmt = 6, algo = 0
 
     # check subprocess output
     cmd = " ".join(cmd)
+    print(cmd)
     output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
     output = output.decode("utf-8")
     output = output.split('\n')
