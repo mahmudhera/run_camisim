@@ -1,7 +1,7 @@
 # sourmash resource usage filename format: sourmash_batch_output/metagenome_<error_rate>_seed_<seed>.fastq_resource_usage_k_15
 # resource usage file contains: walltime,cputime,max_rss,avg_rss
 
-error_rates = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5]
+error_rates = [0.0, 0.01, 0.02, 0.03, 0.04, 0.05]
 seeds = range(2, 32)
 
 # for every error rate, find the maximum RSS value
