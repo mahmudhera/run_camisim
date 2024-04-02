@@ -4,7 +4,7 @@ import time
 def main():
     #sizes = [0.4, 0.8, 1.6, 3.2, 6.4]
     # only need to run for 3.2 and 6.4, already ran for 0.4, 0.8, 1.6
-    sizes = [3.2, 6.4]
+    sizes = [3.2, 6.4, 12.8]
     num_runs = 30
 
     for size in sizes:
@@ -19,8 +19,11 @@ def main():
 
         cmd = "/usr/bin/time -v python ../../run_tools/run_diamond/run_diamond_batch.py --threads 128 --diamond_script ../../run_tools/run_diamond/run_diamond.py --output_dir diamond_fast_batch_output " + " ".join(metagenome_files)
         print(cmd)
-        subprocess.call(cmd, shell=True)
-        output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
+        try:
+            output = subprocess.check_output(cmd, stderr = subprocess.STDOUT, shell=True)
+        except subprocess.CalledProcessError as e:
+            print(e.output)
+            continue
         output = output.decode("utf-8")
         output = output.split('\n')
 
