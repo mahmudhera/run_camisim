@@ -60,11 +60,6 @@ if __name__ == '__main__':
             command.append("--sensitive")
         if args.postprocess_only:
             command.append("--postprocess_only")
-        
-        if 'metagenomes/metagenome_3.2_seed_7.fastq' in file:
-            print("Running command: " + " ".join(command))
-        else:
-            continue
 
         # run the command
         res = subprocess.run(command) 
