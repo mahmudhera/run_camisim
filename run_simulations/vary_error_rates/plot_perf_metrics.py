@@ -27,11 +27,11 @@ merged_data = pd.merge(mean_performance_data, std_performance_data, on=['size', 
 # List of metrics to plot
 metrics = ['purity', 'completeness', 'wt_purity', 'wt_completeness', 'pearsonr_common', 'pearsonr_all', 
             'kl_div_common_gt_to_pred', 
-           'kl_div_common_pred_to_gt', 'weighted_jaccard', 'bray_curtis']
+           'completeness_top_95', 'weighted_jaccard', 'bray_curtis']
 
-metric_titles = ['Purity', 'Completeness', 'Weighted Purity', 'Weighted Completeness', 'Pearson Correlation (Common KOs)',
+metric_titles = ['Purity', 'Completeness (in all KOs)', 'Weighted Purity', 'Weighted Completeness', 'Pearson Correlation (Common KOs)',
                  'Pearson Correlation (All KOs)', 'KL Divergence (Ground Truth to Predictions)', 
-                 'KL Divergence (Predictions to Ground Truth)', 'Jaccard Similarity', 'Bray-Curtis Distance']
+                 'Completeness (in top 95% KOs)', 'Weighted Jaccard Similarity', 'Bray-Curtis Distance']
 
 # Number of unique tools in the dataset
 num_tools = merged_data['tool'].nunique()
@@ -49,7 +49,16 @@ for i, metric in enumerate(metrics, 1):
     # get title of the metric
     metric_title = metric_titles[i-1]
 
+    if metric == 'completeness' or metric == 'completeness_top_95':
+        ylow, yhigh = 0.4, 1.03
+        use_yrange = True
+    else:
+        ylow, yhigh, use_yrange = None, None, False
+
     plt.subplot(5, 2, i)
+
+    if use_yrange:
+        plt.ylim(ylow, yhigh)
 
     # Creating a lineplot with colorblind-friendly colors and markers
     lineplot = sns.lineplot(
@@ -65,7 +74,7 @@ for i, metric in enumerate(metrics, 1):
 
     plt.xlabel('Error rate (proportion)')
     plt.ylabel(metric_title)
-    plt.title(f'Average {metric_title}')
+    #plt.title(f'Average {metric_title}')
     plt.xticks(subset['size'].unique(), labels=subset['size'].unique())
     plt.legend(title='Tool')
 

@@ -73,7 +73,7 @@ for i, metric in enumerate(resource_metrics, 1):
     y_label = 'Log Seconds' if metric in ['walltime', 'cputime'] else 'Log Gbytes'
     plt.ylabel(y_label)
     #plt.title(f'Mean Log {metric.title()} with Error Bars' if metric in ['walltime', 'cputime'] else f'Mean {metric.title()} with Error Bars')
-    plt.title('a' if metric == 'walltime' else 'b')
+    plt.title('(a) Wall-clock time' if metric == 'walltime' else '(b) Peak memory usage')
     plt.xticks(subset['size'].unique(), labels=subset['size'].unique())
     plt.legend(title='Tool')
 
